@@ -18,22 +18,25 @@ public class User {
     @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "user_password", nullable = false)
+    private String userPassword;
 
-    @Column(name = "avatar")
-    private String avatar;
+    @Column(name = "user_avatar")
+    private String userAvatar;
 
-    @Column(name = "gender")
-    private String gender;
+    @Column(name = "user_gender")
+    private String userGender;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "user_email")
+    private String userEmail;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "user_phone")
+    private String userPhone;
 
-    @Column(name = "permissions")
-    private String permissions;
+    @Column(name = "user_status")
+    private String userStatus;
+
+    @Column(name = "user_permissions")
+    private String userPermissions;
 
 }

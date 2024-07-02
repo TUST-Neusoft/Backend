@@ -28,7 +28,7 @@ public class AuthController {
         User user = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
         if (user != null) {
             // 可以选择不返回密码等敏感信息
-            user.setPassword(null);
+            user.setUserPassword(null);
             return Result.success("登陆成功",user);
         }
         return Result.fail("登陆失败");
