@@ -31,6 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginByPhone(String phone, String password) {
-        return userRepository.findByPhoneAndPassword(phone, password);
+        return userRepository.findByUserPhoneAndUserPassword(phone, password);
     }
 }

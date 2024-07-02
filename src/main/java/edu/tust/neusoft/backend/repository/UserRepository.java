@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String userName);
 
     // 根据电子邮件查找用户（如果需要）
-    User findByPhoneAndPassword(String phone, String password);  // 新增方法
+    User findByUserPhoneAndUserPassword(String phone, String password);  // 新增方法
 
 }
