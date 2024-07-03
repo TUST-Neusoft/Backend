@@ -35,7 +35,7 @@ public class Goods {
     private String goodsPicture;
 
     @Column(name = "goods_market_price")
-    private Double goodsMarketPrice; // 改为 Double
+    private Double goodsMarketPrice;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
