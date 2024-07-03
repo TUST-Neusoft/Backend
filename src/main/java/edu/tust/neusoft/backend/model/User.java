@@ -4,39 +4,49 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "user")
 public class User {
-    // Getters and Setters
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", nullable = false)
+    private int id;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "phone", length = 20, unique = true)
+    private String phone;
+
+    @Column(name = "user_name", length = 20)
     private String userName;
 
-    @Column(name = "user_password", nullable = false)
+    @Column(name = "user_password", length = 100)
     private String userPassword;
 
-    @Column(name = "user_avatar")
-    private String userAvatar;
+    @Column(name = "sex", length = 2)
+    private String sex;
 
-    @Column(name = "user_gender")
-    private String userGender;
+    @Column(name = "mail", length = 50)
+    private String mail;
 
-    @Column(name = "user_email")
-    private String userEmail;
+    @Column(name = "avatar", length = 200)
+    private String avatar;
 
-    @Column(name = "user_phone")
-    private String userPhone;
+    @Column(name = "last_login_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastLoginTime;
 
     @Column(name = "user_status")
-    private String userStatus;
+    private int userStatus;
 
-    @Column(name = "user_permissions")
-    private String userPermissions;
+    @Column(name = "create_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTime;
 
+    @Column(name = "update_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime;
 }

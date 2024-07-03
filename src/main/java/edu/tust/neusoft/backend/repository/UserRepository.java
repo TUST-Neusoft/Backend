@@ -7,9 +7,12 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     // 根据用户名查找用户
-    Optional<User> findByUserName(String userName);
+    Optional<User> findByPhone(String userPhone);
 
-    // 根据电子邮件查找用户（如果需要）
-    User findByUserPhoneAndUserPassword(String phone, String password);  // 新增方法
+    // 根据手机号和密码查找用户
+    User findByPhoneAndUserPassword(String phone, String password);
+
+    // 根据手机号和用户名查找用户
+    User findByPhoneAndUserName(String phone, String userName);
 
 }

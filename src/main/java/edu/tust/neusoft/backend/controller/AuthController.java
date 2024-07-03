@@ -1,6 +1,7 @@
 package edu.tust.neusoft.backend.controller;
 
 import edu.tust.neusoft.backend.model.User;
+import edu.tust.neusoft.backend.model.dto.ForgetRequest;
 import edu.tust.neusoft.backend.model.dto.LoginRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
@@ -19,18 +20,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public Result register(@RequestBody User user) {
         return userService.register(user);
     }
 
     @PostMapping("/login")
     public Result login(@RequestBody LoginRequest loginRequest) {
-        User user = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
-        if (user != null) {
-            // 可以选择不返回密码等敏感信息
-            user.setUserPassword(null);
-            return Result.success("登陆成功",user);
-        }
-        return Result.fail("登陆失败");
+        return userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
+    }
+
+    @PostMapping("/forget")
+    public Result forget(@RequestBody ForgetRequest forgetRequest) {
+        return userService.forgetPassword(forgetRequest.getPhone(), forgetRequest.getPassword(), forgetRequest.getUserName());
     }
 }

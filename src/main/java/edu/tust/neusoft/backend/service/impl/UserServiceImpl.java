@@ -2,8 +2,8 @@ package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.User;
 import edu.tust.neusoft.backend.repository.UserRepository;
+import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,19 +18,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
-        // 检查用户名是否已经存在
-        Optional<User> existingUser = userRepository.findByUserName(user.getUserName());
+    public Result register(User user) {
+        // 检查手机号是否已经存在
+        Optional<User> existingUser = userRepository.findByPhone(user.getPhone());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("Username already exists");
+            return Result.fail("手机号已存在！");
         }
-
-        // 如果没有现有用户，则保存新用户
-        return userRepository.save(user);
+        // 如果没有手机号，则保存新用户
+        userRepository.save(user);
+        return Result.success("注册成功", user);
     }
 
     @Override
-    public User loginByPhone(String phone, String password) {
-        return userRepository.findByUserPhoneAndUserPassword(phone, password);
+    public Result loginByPhone(String phone, String password) {
+        User user = userRepository.findByPhoneAndUserPassword(phone, password);
+        if (user != null) {
+            // 可以选择不返回密码等敏感信息
+            user.setUserPassword(null);
+            return Result.success("登陆成功", user);
+        }
+        return Result.fail("登陆失败");
+    }
+
+    @Override
+    public Result forgetPassword(String phone, String password, String userName) {
+        User user = userRepository.findByPhoneAndUserName(phone, userName);
+        if (user != null) {
+            // 可以选择不返回密码等敏感信息
+            user.setUserPassword(password);
+            userRepository.save(user);
+            return Result.success("修改成功", user);
+        }
+        return Result.fail("修改失败");
     }
 }
