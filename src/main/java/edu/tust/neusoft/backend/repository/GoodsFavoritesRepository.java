@@ -8,4 +8,6 @@ import java.util.List;
 public interface GoodsFavoritesRepository extends JpaRepository<GoodsFavorites, Integer> {
     long countByGoodsNo(String goodsNo);
     List<GoodsFavorites> findByUserId(int userId);
+    boolean existsById(int id);  // 新增方法
+    void deleteById(int id);  // 新增方法
 }

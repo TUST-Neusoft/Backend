@@ -4,6 +4,7 @@ import edu.tust.neusoft.backend.model.User;
 import edu.tust.neusoft.backend.repository.UserRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,6 +14,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -50,5 +52,10 @@ public class UserServiceImpl implements UserService {
             return Result.success("修改成功", user);
         }
         return Result.fail("修改失败");
+    }
+
+    @Override
+    public boolean existsById(int userId) {
+        return userRepository.existsById(userId);
     }
 }

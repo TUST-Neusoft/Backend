@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 根据手机号和用户名查找用户
     User findByPhoneAndUserName(String phone, String userName);
 
+    // 检查 user_id 是否存在
+    boolean existsById(int userId);
 }

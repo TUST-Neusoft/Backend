@@ -40,4 +40,9 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return Result.success("获取成功", goodsList);
     }
+
+    @Override
+    public boolean existsByGoodsNo(String goodsNo) {
+        return goodsRepository.findByGoodsNo(goodsNo) != null;
+    }
 }

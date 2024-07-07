@@ -6,4 +6,5 @@ public interface GoodsService {
     Result getGoodsByCategoryId(int categoryId);
     Result getGoodsByGoodsNo(String goodsNo);
     Result searchGoodsByGoodsName(String goodsName);
+    boolean existsByGoodsNo(String goodsNo);
 }

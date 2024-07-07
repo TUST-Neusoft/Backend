@@ -30,4 +30,20 @@ public class GoodsFavoritesServiceImpl implements GoodsFavoritesService {
         return Result.success("获取成功", favoritesList);
     }
 
+    @Override
+    public Result addFavorite(GoodsFavorites goodsFavorites) {
+        goodsFavorites.setCreateTime(LocalDateTime.now());
+        goodsFavoritesRepository.save(goodsFavorites);
+        return Result.success("添加成功", null);
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return goodsFavoritesRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        goodsFavoritesRepository.deleteById(id);
+    }
 }
