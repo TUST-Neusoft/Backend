@@ -26,15 +26,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public Result login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        Result result = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
-        if (result.getCode() == 200) {
-            User user = (User) result.getData();
-            Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
-        }
-        return result;
+        return userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword(), response);
     }
 
     @PostMapping("/forget")

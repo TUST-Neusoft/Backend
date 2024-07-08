@@ -63,9 +63,9 @@ public class CartsServiceImpl implements CartsService {
             goodsDTO.setCategoryId(goods.getCategoryId());
             goodsDTO.setGoodsIntroduce(goods.getGoodsIntroduce());
             goodsDTO.setGoodsContent(goods.getGoodsContent());
-            goodsDTO.setGoodState(goods.getGoodState());
+            goodsDTO.setGoodState(goods.getGoodsState());
             goodsDTO.setGoodsPicture(goods.getGoodsPicture());
-            goodsDTO.setGoodsPrice(goods.getGoodsPrice());
+            goodsDTO.setGoodsPrice(goods.getGoodsMarketPrice());
             goodsDTO.setCreateTime(goods.getCreateTime());
             goodsDTO.setUpdateTime(goods.getUpdateTime());
 
@@ -113,7 +113,7 @@ public class CartsServiceImpl implements CartsService {
         }
 
         // 检查用户是否存在
-        Optional<User> userOpt = userRepository.findById(cart.getUserId().longValue());
+        Optional<User> userOpt = userRepository.findById(cart.getUserId());
         if (!userOpt.isPresent()) {
             return Result.fail("User does not exist");
         }
@@ -138,7 +138,7 @@ public class CartsServiceImpl implements CartsService {
         }
 
         // 检查用户是否存在
-        Optional<User> userOpt = userRepository.findById(Long.valueOf(cart.getUserId()));
+        Optional<User> userOpt = userRepository.findById(cart.getUserId());
         if (!userOpt.isPresent()) {
             return Result.fail("用户不存在");
         }

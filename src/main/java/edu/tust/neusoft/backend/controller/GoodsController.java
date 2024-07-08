@@ -19,25 +19,25 @@ public class GoodsController {
     }
 
     @GetMapping("/getAll")
-    public Result getGoodsByCategoryId(@RequestParam("category_id") Integer categoryId) {
+    public Result getGoodsByCategoryId(Integer categoryId) {
         if (categoryId == null) {
-            return Result.fail("category_id 参数不能为空");
+            return Result.fail("categoryId参数不能为空");
         }
         return goodsService.getGoodsByCategoryId(categoryId);
     }
 
     @GetMapping("/getDetail")
-    public Result getGoodsByGoodsNo(@RequestParam("goods_no") String goodsNo) {
+    public Result getGoodsByGoodsNo(String goodsNo) {
         if (goodsNo == null || goodsNo.isEmpty()) {
-            return Result.fail("goods_no 参数不能为空");
+            return Result.fail("goodsNo参数不能为空");
         }
         return goodsService.getGoodsByGoodsNo(goodsNo);
     }
 
     @GetMapping("/search")
-    public Result searchGoodsByGoodsName(@RequestParam("goods_name") String goodsName) {
+    public Result searchGoodsByGoodsName(String goodsName) {
         if (goodsName == null || goodsName.isEmpty()) {
-            return Result.fail("goods_name 参数不能为空");
+            return Result.fail("goodsName参数不能为空");
         }
         return goodsService.searchGoodsByGoodsName(goodsName);
     }

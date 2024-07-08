@@ -19,12 +19,12 @@ public class OrdersController {
     }
 
     @GetMapping("/getMyOrders")
-    public Result getMyOrders(@RequestParam("user_id") int userId) {
+    public Result getMyOrders(@CookieValue int userId) {
         return ordersService.getOrdersByUserId(userId);
     }
 
     @GetMapping("/getOrders")
-    public Result getOrders(@RequestParam("order_no") String orderNo) {
+    public Result getOrders(String orderNo) {
         return orderDetailService.getOrderDetailByOrderNo(orderNo);
     }
 

@@ -5,16 +5,25 @@ import edu.tust.neusoft.backend.model.dto.UpdateUserRequest;
 import edu.tust.neusoft.backend.repository.UserRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
+import edu.tust.neusoft.backend.utils.MD5Utils;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    @Resource
+    private StringRedisTemplate redis;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -32,10 +41,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result loginByPhone(String phone, String password) {
+    public Result loginByPhone(String phone, String password, HttpServletResponse response) {
         User user = userRepository.findByPhoneAndUserPassword(phone, password);
         if (user != null) {
             user.setUserPassword(null);  // 不返回密码
+            MD5Utils md5Utils = new MD5Utils();
+            String token = md5Utils.generateMd5Token();
+            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
+
+            // 创建并配置 userId Cookie
+            Cookie userIdCookie = new Cookie("userId", String.valueOf(user.getId()));
+            userIdCookie.setHttpOnly(true);
+            userIdCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
+            userIdCookie.setPath("/"); // 设置 Cookie 的路径
+
+            // 创建并配置 token Cookie
+            Cookie tokenCookie = new Cookie("token", token);
+            tokenCookie.setHttpOnly(true);
+            tokenCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
+            tokenCookie.setPath("/"); // 设置 Cookie 的路径
+
+            // 将 Cookies 添加到响应中
+            response.addCookie(userIdCookie);
+            response.addCookie(tokenCookie);
+
             return Result.success("登陆成功", user);
         }
         return Result.fail("登陆失败");
