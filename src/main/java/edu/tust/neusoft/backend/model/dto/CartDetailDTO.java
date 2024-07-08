@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 
 public class CartDetailDTO {
-    private Long id;
-    private int userId;
+    private Integer  id;
+    private Integer userId;
     private StoreDTO storeNo;
     private GoodsDTO goodsNo;
     private int amount;
