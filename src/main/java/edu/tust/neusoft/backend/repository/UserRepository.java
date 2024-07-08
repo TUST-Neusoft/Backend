@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    // 根据用户名查找用户
-    Optional<User> findByPhone(String userPhone);
+public interface UserRepository extends JpaRepository<User, Integer> {
+    // 根据手机号查找用户
+    Optional<User> findByPhone(String phone);
 
     // 根据手机号和密码查找用户
     User findByPhoneAndUserPassword(String phone, String password);
