@@ -1,24 +1,33 @@
 package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.User;
+import edu.tust.neusoft.backend.model.Wallet;
+import edu.tust.neusoft.backend.model.WalletLog;
 import edu.tust.neusoft.backend.model.dto.UpdateUserRequest;
 import edu.tust.neusoft.backend.repository.UserRepository;
+import edu.tust.neusoft.backend.repository.WalletRepository;
+import edu.tust.neusoft.backend.repository.WalletLogRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
+    private final WalletLogRepository walletLogRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, WalletRepository walletRepository, WalletLogRepository walletLogRepository) {
         this.userRepository = userRepository;
+        this.walletRepository = walletRepository;
+        this.walletLogRepository = walletLogRepository;
     }
 
     @Override
@@ -118,6 +127,74 @@ public class UserServiceImpl implements UserService {
             return Result.success("密码更新成功", user);
         }
         return Result.fail("用户不存在");
+    }
+
+    @Override
+    public Result getWalletBalance(int userId) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet != null) {
+            return Result.success("获取成功", wallet.getWalletBalance());
+        }
+        return Result.fail("用户钱包不存在");
+    }
+
+    @Override
+    public Result chargeWallet(int userId, double amount) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet != null) {
+            wallet.setWalletBalance(wallet.getWalletBalance() + amount);
+            wallet.setUpdateTime(new Date());
+            walletRepository.save(wallet);
+            return Result.success("充值成功", wallet.getWalletBalance());
+        }
+        return Result.fail("用户钱包不存在");
+    }
+
+    @Override
+    public Result transferMoney(int userId, String targetPhone, double amount) {
+        if (amount <= 0) {
+            return Result.fail("转账金额必须大于零");
+        }
+
+        Wallet senderWallet = walletRepository.findByUserId(userId);
+        if (senderWallet == null) {
+            return Result.fail("发送方用户钱包不存在");
+        }
+
+        if (senderWallet.getWalletBalance() < amount) {
+            return Result.fail("发送方用户钱包余额不足");
+        }
+
+        User targetUser = userRepository.findByPhone(targetPhone).orElse(null);
+        if (targetUser == null) {
+            return Result.fail("目标用户不存在");
+        }
+
+        Wallet receiverWallet = walletRepository.findByUserId(targetUser.getId());
+        if (receiverWallet == null) {
+            return Result.fail("目标用户钱包不存在");
+        }
+
+        senderWallet.setWalletBalance(senderWallet.getWalletBalance() - amount);
+        senderWallet.setUpdateTime(new Date());
+        walletRepository.save(senderWallet);
+
+        receiverWallet.setWalletBalance(receiverWallet.getWalletBalance() + amount);
+        receiverWallet.setUpdateTime(new Date());
+        walletRepository.save(receiverWallet);
+
+        return Result.success("转账成功", null);
+    }
+
+    @Override
+    public Result getWalletLogs(int userId) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet == null) {
+            return Result.fail("用户钱包不存在");
+        }
+
+        List<WalletLog> walletLogs = walletLogRepository.findByWalletId(wallet.getId());
+        return Result.success("获取成功", walletLogs);
     }
 
     @Override

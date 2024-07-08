@@ -12,5 +12,9 @@ public interface UserService {
     Result getUserById(int userId); // 根据ID获取用户信息的方法
     Result updateUser(UpdateUserRequest updateUserRequest); // 更新用户信息的方法
     Result updatePassword(int userId, String userPassword); // 更新用户密码的方法
+    Result getWalletBalance(int userId); // 获取钱包余额的方法
+    Result chargeWallet(int userId, double amount); // 充值钱包的方法
+    Result transferMoney(int userId, String targetPhone, double amount); // 转账的方法
+    Result getWalletLogs(int userId); // 获取钱包日志的方法
     boolean existsById(int userId);
 }
