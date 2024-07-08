@@ -5,10 +5,10 @@ import edu.tust.neusoft.backend.model.dto.ForgetRequest;
 import edu.tust.neusoft.backend.model.dto.LoginRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,8 +25,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Result login(@RequestBody LoginRequest loginRequest) {
-        return userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
+    public Result login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        Result result = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
+        if (result.getCode() == 200) {
+            User user = (User) result.getData();
+            Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+        }
+        return result;
     }
 
     @PostMapping("/forget")
