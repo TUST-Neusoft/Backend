@@ -52,7 +52,7 @@ public class CartsServiceImpl implements CartsService {
             if (goodsStoreOpt.isPresent()) {
                 GoodsStore goodsStore = goodsStoreOpt.get();
                 price = goodsStore.getPrice();
-                stock = goodsStore.getStock();
+                stock = (int) goodsStore.getStock();
             }
 
             // Assemble DTOs

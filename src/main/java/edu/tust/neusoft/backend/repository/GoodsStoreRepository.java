@@ -10,4 +10,3 @@ import java.util.Optional;
 public interface GoodsStoreRepository extends JpaRepository<GoodsStore, Long> {
     Optional<GoodsStore> findByGoodsNoAndStoreNo(String goodsNo, String storeNo);
 }
-

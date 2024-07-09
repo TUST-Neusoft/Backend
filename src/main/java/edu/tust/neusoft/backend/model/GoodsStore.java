@@ -24,7 +24,7 @@ public class GoodsStore {
     private Double price;
 
     @Column(name = "goods_stock")
-    private Integer stock;
+    private double stock;
 
     // 其他字段根据需要添加
 }
