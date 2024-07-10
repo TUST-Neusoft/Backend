@@ -1,9 +1,9 @@
 package edu.tust.neusoft.backend.service.impl;
 
-import edu.tust.neusoft.backend.model.User;
-import edu.tust.neusoft.backend.model.Wallet;
-import edu.tust.neusoft.backend.model.WalletLog;
+import edu.tust.neusoft.backend.model.*;
 import edu.tust.neusoft.backend.model.dto.UpdateUserRequest;
+import edu.tust.neusoft.backend.repository.AdminLoginLogRepository;
+import edu.tust.neusoft.backend.repository.PortalLoginLogRepository;
 import edu.tust.neusoft.backend.repository.UserRepository;
 import edu.tust.neusoft.backend.repository.WalletRepository;
 import edu.tust.neusoft.backend.repository.WalletLogRepository;
@@ -20,12 +20,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PortalLoginLogRepository portalLoginLogRepository;
+    private final AdminLoginLogRepository adminLoginLogRepository;
     private final WalletRepository walletRepository;
     private final WalletLogRepository walletLogRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, WalletRepository walletRepository, WalletLogRepository walletLogRepository) {
+    public UserServiceImpl(UserRepository userRepository, PortalLoginLogRepository portalLoginLogRepository, AdminLoginLogRepository adminLoginLogRepository, WalletRepository walletRepository, WalletLogRepository walletLogRepository) {
         this.userRepository = userRepository;
+        this.portalLoginLogRepository = portalLoginLogRepository;
+        this.adminLoginLogRepository = adminLoginLogRepository;
         this.walletRepository = walletRepository;
         this.walletLogRepository = walletLogRepository;
     }
@@ -41,13 +45,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result loginByPhone(String phone, String password) {
+    public Result loginByPhone(String phone, String password, String loginIp) {
         User user = userRepository.findByPhoneAndUserPassword(phone, password);
         if (user != null) {
+            if (user.getUserStatus() != 1) {
+                return Result.fail("用户被冻结");
+            }
+
+            // 记录登录日志
+            PortalLoginLog loginLog = new PortalLoginLog();
+            loginLog.setUserId(user.getId());
+            loginLog.setLoginIp(loginIp);
+            loginLog.setCreateTime(new Date());
+            portalLoginLogRepository.save(loginLog);
+
             user.setUserPassword(null);  // 不返回密码
             return Result.success("登陆成功", user);
         }
         return Result.fail("登陆失败");
+    }
+
+    @Override
+    public Result adminLoginByPhone(String phone, String password, String loginIp) {
+        User user = userRepository.findByPhoneAndUserPassword(phone, password);
+        if (user != null) {
+            if (user.getUserStatus() != 1) {
+                return Result.fail("用户被冻结");
+            }
+
+            // 记录管理员登录日志
+            AdminLoginLog loginLog = new AdminLoginLog();
+            loginLog.setUserId(user.getId());
+            loginLog.setLoginIp(loginIp);
+            loginLog.setCreateTime(new Date());
+            adminLoginLogRepository.save(loginLog);
+
+            user.setUserPassword(null);  // 不返回密码
+            return Result.success("管理员登陆成功", user);
+        }
+        return Result.fail("管理员登陆失败");
     }
 
     @Override
@@ -200,5 +236,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsById(int userId) {
         return userRepository.existsById(userId);
+    }
+
+    @Override
+    public Result getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return Result.success("获取成功", users);
     }
 }

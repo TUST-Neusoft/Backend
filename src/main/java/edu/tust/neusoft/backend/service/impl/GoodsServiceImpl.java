@@ -45,4 +45,10 @@ public class GoodsServiceImpl implements GoodsService {
     public boolean existsByGoodsNo(String goodsNo) {
         return goodsRepository.findByGoodsNo(goodsNo) != null;
     }
+
+    @Override
+    public Result getAllGoods() {
+        List<Goods> goodsList = goodsRepository.findAll();
+        return Result.success("获取成功", goodsList);
+    }
 }

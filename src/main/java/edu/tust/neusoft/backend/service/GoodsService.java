@@ -7,4 +7,5 @@ public interface GoodsService {
     Result getGoodsByGoodsNo(String goodsNo);
     Result searchGoodsByGoodsName(String goodsName);
     boolean existsByGoodsNo(String goodsNo);
+    Result getAllGoods(); // 添加方法签名
 }
