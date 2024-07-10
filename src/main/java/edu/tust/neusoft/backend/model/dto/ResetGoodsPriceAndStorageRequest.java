@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResetGoodsMsgRequest {
+public class ResetGoodsPriceAndStorageRequest {
     @JsonProperty("store_no")
     private String storeNo;
     @JsonProperty("goods_no")

@@ -1,7 +1,7 @@
 package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.GoodsStore;
-import edu.tust.neusoft.backend.model.dto.ResetGoodsMsgRequest;
+import edu.tust.neusoft.backend.model.dto.ResetGoodsPriceAndStorageRequest;
 import edu.tust.neusoft.backend.repository.GoodsStoreRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.GoodsStoreService;
@@ -32,14 +32,14 @@ public class GoodsStoreServiceImpl implements GoodsStoreService {
     }
 
     @Override
-    public Result resetGoodsMsg(ResetGoodsMsgRequest resetGoodsMsgRequest) {
-        GoodsStore goodsStore = goodsStoreRepository.findByStoreNoAndGoodsNo(resetGoodsMsgRequest.getStoreNo(), resetGoodsMsgRequest.getGoodsNo());
+    public Result resetGoodsPriceAndStorage(ResetGoodsPriceAndStorageRequest resetGoodsPriceAndStorageRequest) {
+        GoodsStore goodsStore = goodsStoreRepository.findByStoreNoAndGoodsNo(resetGoodsPriceAndStorageRequest.getStoreNo(), resetGoodsPriceAndStorageRequest.getGoodsNo());
         if (goodsStore == null) {
             return Result.fail("未找到指定的商品");
         }
 
-        goodsStore.setGoodsStock(resetGoodsMsgRequest.getGoodsStock());
-        goodsStore.setGoodsPrice(resetGoodsMsgRequest.getGoodsPrice());
+        goodsStore.setGoodsStock(resetGoodsPriceAndStorageRequest.getGoodsStock());
+        goodsStore.setGoodsPrice(resetGoodsPriceAndStorageRequest.getGoodsPrice());
         goodsStore.setUpdateTime(LocalDateTime.now());
         goodsStoreRepository.save(goodsStore);
 

@@ -1,12 +1,14 @@
 package edu.tust.neusoft.backend.controller;
 
+import edu.tust.neusoft.backend.model.dto.AddAreaRequest;
 import edu.tust.neusoft.backend.model.dto.AddGoodsCategoryRequest;
 import edu.tust.neusoft.backend.model.dto.ResetCategoryRequest;
-import edu.tust.neusoft.backend.model.dto.ResetGoodsMsgRequest;
+import edu.tust.neusoft.backend.model.dto.ResetGoodsPriceAndStorageRequest;
+import edu.tust.neusoft.backend.model.dto.ResetGoodsRequest;
 import edu.tust.neusoft.backend.response.Result;
+import edu.tust.neusoft.backend.service.AreaService;
 import edu.tust.neusoft.backend.service.GoodsCategoryService;
 import edu.tust.neusoft.backend.service.GoodsService;
-import edu.tust.neusoft.backend.service.AreaService;
 import edu.tust.neusoft.backend.service.StoreService;
 import edu.tust.neusoft.backend.service.GoodsStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +57,9 @@ public class ManageController {
         return goodsStoreService.getGoodsByStoreNo(storeNo);
     }
 
-    @PostMapping("/ResetGoodsMsg")
-    public Result resetGoodsMsg(@RequestBody ResetGoodsMsgRequest resetGoodsMsgRequest) {
-        return goodsStoreService.resetGoodsMsg(resetGoodsMsgRequest);
+    @PostMapping("/ResetGoodsPriceAndStorage")
+    public Result resetGoodsPriceAndStorage(@RequestBody ResetGoodsPriceAndStorageRequest resetGoodsPriceAndStorageRequest) {
+        return goodsStoreService.resetGoodsPriceAndStorage(resetGoodsPriceAndStorageRequest);
     }
 
     @PostMapping("/AddGoodsCategory")
@@ -68,5 +70,15 @@ public class ManageController {
     @PostMapping("/ResetCategory")
     public Result resetCategory(@RequestBody ResetCategoryRequest resetCategoryRequest) {
         return goodsCategoryService.resetCategory(resetCategoryRequest);
+    }
+
+    @PostMapping("/ResetGoodsMsg")
+    public Result resetGoodsMsg(@RequestBody ResetGoodsRequest resetGoodsRequest) {
+        return goodsService.resetGoodsMsg(resetGoodsRequest);
+    }
+
+    @PostMapping("/AddArea")
+    public Result addArea(@RequestBody AddAreaRequest addAreaRequest) {
+        return areaService.addArea(addAreaRequest);
     }
 }
