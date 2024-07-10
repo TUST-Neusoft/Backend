@@ -25,8 +25,8 @@ public class ParkAdminServiceImpl implements ParkAdminService {
     }
 
     @Override
-    public Result getAllParking() {
-        List<Parking> parkings = parkingRepository.findAll();
+    public Result getAllParkingByUserId(Long userId) {
+        List<Parking> parkings = parkingRepository.findByUserId(userId);
         List<ParkingResponse> responseList = parkings.stream().map(parking -> {
             List<ParkingBind> parkingBinds = parkingBindRepository.findByParkingId(parking.getId());
             ParkingResponse response = new ParkingResponse();

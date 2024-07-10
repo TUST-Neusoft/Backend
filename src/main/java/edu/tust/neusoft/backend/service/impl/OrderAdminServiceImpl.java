@@ -31,8 +31,11 @@ public class OrderAdminServiceImpl implements OrderAdminService {
 
     @Override
     public Result getAllOrdersByUserId(int userId) {
-        // Implementation for getAllOrdersByUserId if required
-        return null;
+        List<Orders> ordersList = ordersRepository.findByUserId(userId);
+        if (ordersList.isEmpty()) {
+            return Result.fail("没有找到订单");
+        }
+        return Result.success("获取成功", ordersList);
     }
 
     @Override

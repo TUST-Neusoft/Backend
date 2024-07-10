@@ -1,12 +1,12 @@
 package edu.tust.neusoft.backend.repository;
 
-import edu.tust.neusoft.backend.model.Parking;
+import edu.tust.neusoft.backend.model.Charge;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ParkingRepository extends JpaRepository<Parking, Long> {
-    List<Parking> findByUserId(Long userId);
+public interface ChargeRepository extends JpaRepository<Charge, Long> {
+    List<Charge> findByUserId(Long userId);
 }
