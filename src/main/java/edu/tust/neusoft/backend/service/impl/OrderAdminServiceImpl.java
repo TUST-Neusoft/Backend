@@ -60,7 +60,7 @@ public class OrderAdminServiceImpl implements OrderAdminService {
                 response.setCategoryId(goods.getCategoryId());
                 response.setGoodsIntroduce(goods.getGoodsIntroduce());
                 response.setGoodsContent(goods.getGoodsContent());
-                response.setGoodsState(goods.getGoodsState());
+                response.setGoodsState(goods.getGoodState());
                 response.setGoodsPicture(goods.getGoodsPicture());
                 response.setGoodsMarketPrice(goods.getGoodsPrice());
                 response.setGoodsCreateTime(goods.getCreateTime());

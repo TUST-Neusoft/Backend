@@ -2,6 +2,7 @@ package edu.tust.neusoft.backend.model;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -38,10 +39,8 @@ public class Goods {
     private Double goodsPrice;
 
     @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "update_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }
