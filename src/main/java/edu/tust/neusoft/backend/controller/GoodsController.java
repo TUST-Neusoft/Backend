@@ -19,11 +19,8 @@ public class GoodsController {
     }
 
     @GetMapping("/getAll")
-    public Result getGoodsByCategoryId(Integer categoryId) {
-        if (categoryId == null) {
-            return Result.fail("categoryId参数不能为空");
-        }
-        return goodsService.getGoodsByCategoryId(categoryId);
+    public Result getGoodsByCategoryId() {
+        return goodsService.getAllGoods();
     }
 
     @GetMapping("/getDetail")

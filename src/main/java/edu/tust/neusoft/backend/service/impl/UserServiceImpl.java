@@ -1,6 +1,6 @@
 package edu.tust.neusoft.backend.service.impl;
 
-import edu.tust.neusoft.backend.model.User;
+import edu.tust.neusoft.backend.model.*;
 import edu.tust.neusoft.backend.model.dto.UpdateUserRequest;
 import edu.tust.neusoft.backend.repository.AdminLoginLogRepository;
 import edu.tust.neusoft.backend.repository.PortalLoginLogRepository;
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
             // 记录登录日志
             PortalLoginLog loginLog = new PortalLoginLog();
-            loginLog.setUserId(user.getId());
+            loginLog.setUserId(Math.toIntExact(user.getId()));
             loginLog.setLoginIp(loginIp);
             loginLog.setCreateTime(new Date());
             portalLoginLogRepository.save(loginLog);
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
             // 记录管理员登录日志
             AdminLoginLog loginLog = new AdminLoginLog();
-            loginLog.setUserId(user.getId());
+            loginLog.setUserId(Math.toIntExact(user.getId()));
             loginLog.setLoginIp(loginIp);
             loginLog.setCreateTime(new Date());
             adminLoginLogRepository.save(loginLog);
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletBalance(int userId) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId);
         if (wallet != null) {
             return Result.success("获取成功", wallet.getWalletBalance());
         }
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result chargeWallet(int userId, double amount) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId);
         if (wallet != null) {
             wallet.setWalletBalance(wallet.getWalletBalance() + amount);
             wallet.setUpdateTime(new Date());
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("转账金额必须大于零");
         }
 
-        Wallet senderWallet = walletRepository.findByUserId(userId);
+        Wallet senderWallet = walletRepository.findByUserId((long) userId);
         if (senderWallet == null) {
             return Result.fail("发送方用户钱包不存在");
         }
@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletLogs(int userId) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId);
         if (wallet == null) {
             return Result.fail("用户钱包不存在");
         }

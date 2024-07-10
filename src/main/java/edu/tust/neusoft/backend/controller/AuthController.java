@@ -5,6 +5,7 @@ import edu.tust.neusoft.backend.model.dto.ForgetRequest;
 import edu.tust.neusoft.backend.model.dto.LoginRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -25,8 +26,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Result login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        Result result = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword());
+    public Result login(@RequestBody LoginRequest loginRequest, HttpServletResponse response, HttpServletRequest request) {
+        String loginIp = request.getRemoteAddr();
+        Result result = userService.loginByPhone(loginRequest.getPhone(), loginRequest.getPassword(), loginIp);
         if (result.getCode() == 200) {
             User user = (User) result.getData();
             Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));

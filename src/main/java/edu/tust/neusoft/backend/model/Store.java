@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "area_id")
     private int areaId;
@@ -58,8 +59,8 @@ public class Store {
     private int storeStatus;
 
     @Column(name = "create_time")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 }

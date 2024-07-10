@@ -11,6 +11,7 @@ import edu.tust.neusoft.backend.repository.StoreRepository;
 import edu.tust.neusoft.backend.repository.UserRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.CartsService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,14 +46,14 @@ public class CartsServiceImpl implements CartsService {
             String storeNo = cart.getStoreNo();
             Store store = storeRepository.findByStoreNo(storeNo);
 
-            Optional<GoodsStore> goodsStoreOpt = goodsStoreRepository.findByGoodsNoAndStoreNo(goodsNo, storeNo);
+            Optional<GoodsStore> goodsStoreOpt = Optional.ofNullable(goodsStoreRepository.findByGoodsNoAndStoreNo(goodsNo, storeNo));
             Double price = null;
             Integer stock = null;
 
             if (goodsStoreOpt.isPresent()) {
                 GoodsStore goodsStore = goodsStoreOpt.get();
-                price = goodsStore.getPrice();
-                stock = goodsStore.getStock();
+                price = goodsStore.getGoodsPrice();
+                stock = goodsStore.getGoodsStock();
             }
 
             // Assemble DTOs
@@ -69,24 +70,7 @@ public class CartsServiceImpl implements CartsService {
             goodsDTO.setCreateTime(goods.getCreateTime());
             goodsDTO.setUpdateTime(goods.getUpdateTime());
 
-            StoreDTO storeDTO = new StoreDTO();
-            storeDTO.setId(store.getId());
-            storeDTO.setAreaId(store.getAreaId());
-            storeDTO.setStoreNo(store.getStoreNo());
-            storeDTO.setStoreName(store.getStoreName());
-            storeDTO.setStoreAddress(store.getStoreAddress());
-            storeDTO.setMaxLongitude(store.getMaxLongitude());
-            storeDTO.setMaxLatitude(store.getMaxLatitude());
-            storeDTO.setMinLongitude(store.getMinLongitude());
-            storeDTO.setMinLatitude(store.getMinLatitude());
-            storeDTO.setStoreIntroduce(store.getStoreIntroduce());
-            storeDTO.setStartTime(store.getStartTime());
-            storeDTO.setCloseTime(store.getCloseTime());
-            storeDTO.setStoreStatus(store.getStoreStatus());
-            storeDTO.setCreateTime(store.getCreateTime());
-            storeDTO.setUpdateTime(store.getUpdateTime());
-            storeDTO.setLongitude(store.getLongitude());
-            storeDTO.setLatitude(store.getLatitude());
+            StoreDTO storeDTO = getStoreDTO(store);
 
             CartDetailDTO cartDTO = new CartDetailDTO();
             cartDTO.setId(cart.getId());
@@ -103,6 +87,29 @@ public class CartsServiceImpl implements CartsService {
         }
 
         return Result.success("获取成功", cartList);
+    }
+
+    @NotNull
+    private static StoreDTO getStoreDTO(Store store) {
+        StoreDTO storeDTO = new StoreDTO();
+        storeDTO.setId(store.getId());
+        storeDTO.setAreaId(store.getAreaId());
+        storeDTO.setStoreNo(store.getStoreNo());
+        storeDTO.setStoreName(store.getStoreName());
+        storeDTO.setStoreAddress(store.getStoreAddress());
+        storeDTO.setMaxLongitude(store.getMaxLongitude());
+        storeDTO.setMaxLatitude(store.getMaxLatitude());
+        storeDTO.setMinLongitude(store.getMinLongitude());
+        storeDTO.setMinLatitude(store.getMinLatitude());
+        storeDTO.setStoreIntroduce(store.getStoreIntroduce());
+        storeDTO.setStartTime(store.getStartTime());
+        storeDTO.setCloseTime(store.getCloseTime());
+        storeDTO.setStoreStatus(store.getStoreStatus());
+        storeDTO.setCreateTime(store.getCreateTime());
+        storeDTO.setUpdateTime(store.getUpdateTime());
+        storeDTO.setLongitude(store.getLongitude());
+        storeDTO.setLatitude(store.getLatitude());
+        return storeDTO;
     }
 
     @Override

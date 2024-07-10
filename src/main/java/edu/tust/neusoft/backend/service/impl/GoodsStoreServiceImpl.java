@@ -33,7 +33,7 @@ public class GoodsStoreServiceImpl implements GoodsStoreService {
 
     @Override
     public Result resetGoodsPriceAndStorage(ResetGoodsPriceAndStorageRequest resetGoodsPriceAndStorageRequest) {
-        GoodsStore goodsStore = goodsStoreRepository.findByStoreNoAndGoodsNo(resetGoodsPriceAndStorageRequest.getStoreNo(), resetGoodsPriceAndStorageRequest.getGoodsNo());
+        GoodsStore goodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(resetGoodsPriceAndStorageRequest.getGoodsNo(), resetGoodsPriceAndStorageRequest.getStoreNo());
         if (goodsStore == null) {
             return Result.fail("未找到指定的商品");
         }

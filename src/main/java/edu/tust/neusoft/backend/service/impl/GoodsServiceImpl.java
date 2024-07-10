@@ -14,8 +14,17 @@ import java.util.List;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
-    @Autowired
-    private GoodsRepository goodsRepository;
+    private final GoodsRepository goodsRepository;
+
+    public GoodsServiceImpl(GoodsRepository goodsRepository) {
+        this.goodsRepository = goodsRepository;
+    }
+
+    @Override
+    public Result getAllGoods() {
+        List<Goods> goodsList = goodsRepository.findAll();
+        return Result.success("获取成功", goodsList);
+    }
 
     @Override
     public Result getGoodsByCategoryId(int categoryId) {
@@ -47,12 +56,6 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public boolean existsByGoodsNo(String goodsNo) {
         return goodsRepository.findByGoodsNo(goodsNo) != null;
-    }
-
-    @Override
-    public Result getAllGoods() {
-        List<Goods> goodsList = goodsRepository.findAll();
-        return Result.success("获取成功", goodsList);
     }
 
     @Override

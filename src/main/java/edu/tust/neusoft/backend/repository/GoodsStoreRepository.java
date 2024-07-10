@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GoodsStoreRepository extends JpaRepository<GoodsStore, Integer> {
     List<GoodsStore> findByStoreNo(String storeNo);
-    GoodsStore findByStoreNoAndGoodsNo(String storeNo, String goodsNo);
+    GoodsStore findByGoodsNoAndStoreNo(String storeNo, String goodsNo);
 }
