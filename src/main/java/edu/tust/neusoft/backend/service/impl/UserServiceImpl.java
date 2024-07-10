@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getUserById(int userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(userId)));
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setUserPassword(null);  // 不返回密码
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("更新请求不能为空");
         }
 
-        Optional<User> userOptional = userRepository.findById(updateUserRequest.getId());
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(updateUserRequest.getId())));
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setPhone(updateUserRequest.getPhone());
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result updatePassword(int userId, String userPassword) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(userId)));
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setUserPassword(userPassword);

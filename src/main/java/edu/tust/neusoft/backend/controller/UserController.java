@@ -38,8 +38,8 @@ public class UserController {
         return userService.updateUser(updateUserRequest);
     }
 
-    @PostMapping("/updatePassword")
-    public Result updatePassword(@CookieValue int userId, @RequestParam("user_password") String userPassword) {
+    @GetMapping("/updatePassword")
+    public Result updatePassword(@CookieValue int userId, @RequestParam String userPassword) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

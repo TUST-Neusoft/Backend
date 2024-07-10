@@ -20,18 +20,18 @@ import java.util.Optional;
 public class OrdersServiceImpl implements OrdersService {
     private static final Logger logger = LoggerFactory.getLogger(OrdersServiceImpl.class);
 
-    @Autowired
-    private OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
 
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    private final OrderDetailRepository orderDetailRepository;
+
+    public OrdersServiceImpl(OrdersRepository ordersRepository, OrderDetailRepository orderDetailRepository) {
+        this.ordersRepository = ordersRepository;
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     @Override
     public Result getOrdersByUserId(int userId) {
         List<Orders> orders = ordersRepository.findByUserId(userId);
-        if (orders.isEmpty()) {
-            return Result.fail("没有找到订单");
-        }
         return Result.success("获取成功", orders);
     }
 }
