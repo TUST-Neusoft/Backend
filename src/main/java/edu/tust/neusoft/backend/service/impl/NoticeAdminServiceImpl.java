@@ -1,5 +1,6 @@
 package edu.tust.neusoft.backend.service.impl;
 
+import cn.hutool.core.date.DateTime;
 import edu.tust.neusoft.backend.model.Notice;
 import edu.tust.neusoft.backend.model.dto.NoticeRequest;
 import edu.tust.neusoft.backend.repository.NoticeRepository;
@@ -33,8 +34,6 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
         notice.setNoticeTitle(noticeRequest.getNoticeTitle());
         notice.setNoticeContent(noticeRequest.getNoticeContent());
         notice.setNoticeStatus(noticeRequest.getNoticeStatus());
-        notice.setCreateTime(LocalDateTime.now());
-        notice.setUpdateTime(LocalDateTime.now());
         noticeRepository.save(notice);
         return Result.success("添加成功", notice);
     }
@@ -45,7 +44,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
         if (optionalNotice.isPresent()) {
             Notice notice = optionalNotice.get();
             notice.setNoticeStatus(0); // 修改通知状态为0
-            notice.setUpdateTime(LocalDateTime.now());
+            notice.setUpdateTime(DateTime.now());
             noticeRepository.save(notice);
             return Result.success("状态已更新", notice);
         } else {
@@ -59,7 +58,7 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
         if (optionalNotice.isPresent()) {
             Notice notice = optionalNotice.get();
             notice.setNoticeStatus(1); // 修改通知状态为1
-            notice.setUpdateTime(LocalDateTime.now());
+            notice.setUpdateTime(DateTime.now());
             noticeRepository.save(notice);
             return Result.success("状态已更新", notice);
         } else {

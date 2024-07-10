@@ -72,9 +72,9 @@ public class GoodsServiceImpl implements GoodsService {
             goods.setCategoryId(goodsDto.getCategoryId());
             goods.setGoodsIntroduce(goodsDto.getGoodsIntroduce());
             goods.setGoodsContent(goodsDto.getGoodsContent());
-            goods.setGoodsState(goodsDto.getGoodsState());
+            goods.setGoodState(goodsDto.getGoodsState());
             goods.setGoodsPicture(goodsDto.getGoodsPicture());
-            goods.setGoodsMarketPrice(goodsDto.getGoodsMarketPrice());
+            goods.setGoodsPrice(goodsDto.getGoodsMarketPrice());
             goods.setUpdateTime(LocalDateTime.now());
         }
 

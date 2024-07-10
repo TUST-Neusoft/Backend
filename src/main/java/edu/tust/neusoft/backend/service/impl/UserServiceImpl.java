@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletBalance(int userId) {
-        Wallet wallet = walletRepository.findByUserId((long) userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId).get();
         if (wallet != null) {
             return Result.success("获取成功", wallet.getWalletBalance());
         }
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result chargeWallet(int userId, double amount) {
-        Wallet wallet = walletRepository.findByUserId((long) userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId).get();
         if (wallet != null) {
             wallet.setWalletBalance(wallet.getWalletBalance() + amount);
             wallet.setUpdateTime(new Date());
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("转账金额必须大于零");
         }
 
-        Wallet senderWallet = walletRepository.findByUserId((long) userId);
+        Wallet senderWallet = walletRepository.findByUserId((long) userId).get();
         if (senderWallet == null) {
             return Result.fail("发送方用户钱包不存在");
         }
@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("目标用户不存在");
         }
 
-        Wallet receiverWallet = walletRepository.findByUserId(targetUser.getId());
+        Wallet receiverWallet = walletRepository.findByUserId(targetUser.getId()).get();
         if (receiverWallet == null) {
             return Result.fail("目标用户钱包不存在");
         }
@@ -224,7 +224,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletLogs(int userId) {
-        Wallet wallet = walletRepository.findByUserId((long) userId);
+        Wallet wallet = walletRepository.findByUserId((long) userId).get();
         if (wallet == null) {
             return Result.fail("用户钱包不存在");
         }
