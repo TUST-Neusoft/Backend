@@ -63,7 +63,7 @@ public class CartsServiceImpl implements CartsService {
             goodsDTO.setCategoryId(goods.getCategoryId());
             goodsDTO.setGoodsIntroduce(goods.getGoodsIntroduce());
             goodsDTO.setGoodsContent(goods.getGoodsContent());
-            goodsDTO.setGoodState(goods.getGoodState());
+            goodsDTO.setGoodState(goods.getGoodsState());
             goodsDTO.setGoodsPicture(goods.getGoodsPicture());
             goodsDTO.setGoodsPrice(goods.getGoodsPrice());
             goodsDTO.setCreateTime(goods.getCreateTime());
