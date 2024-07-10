@@ -1,17 +1,18 @@
 package edu.tust.neusoft.backend.model;
-
-import lombok.Data;
-
+import lombok.Getter;
+import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
-@Data
 @Entity
+@Setter
+@Getter
 @Table(name = "goods")
 public class Goods {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "goods_no")
     private String goodsNo;
@@ -29,13 +30,13 @@ public class Goods {
     private String goodsContent;
 
     @Column(name = "goods_state")
-    private int goodsState;
+    private int goodState;
 
     @Column(name = "goods_picture")
     private String goodsPicture;
 
     @Column(name = "goods_market_price")
-    private Double goodsMarketPrice;
+    private Double goodsPrice;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;

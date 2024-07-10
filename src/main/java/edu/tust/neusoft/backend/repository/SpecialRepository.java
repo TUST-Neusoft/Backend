@@ -1,12 +1,12 @@
 package edu.tust.neusoft.backend.repository;
 
-import edu.tust.neusoft.backend.model.Notice;
+import edu.tust.neusoft.backend.model.Special;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
-    Optional<Notice> findByNoticeTitle(String noticeTitle);
+public interface SpecialRepository extends JpaRepository<Special, Long> {
+    Optional<Special> findBySpecialName(String specialName);
 }

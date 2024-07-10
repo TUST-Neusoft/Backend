@@ -2,7 +2,8 @@ package edu.tust.neusoft.backend.service;
 
 import edu.tust.neusoft.backend.response.Result;
 
-public interface OrderDetailService {
+public interface OrderAdminService {
+    Result getAllOrdersByUserId(int userId);
     Result getOrderDetailByOrderNo(String orderNo);
-    Result getOrderDetailByOrderNoAndUserId(String orderNo, int userId);
+    Result changeOrderStatus(String orderNo);
 }

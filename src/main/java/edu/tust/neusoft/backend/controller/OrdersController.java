@@ -1,5 +1,6 @@
 package edu.tust.neusoft.backend.controller;
 
+import edu.tust.neusoft.backend.model.dto.PayOrderRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.OrderDetailService;
 import edu.tust.neusoft.backend.service.OrdersService;
@@ -28,4 +29,8 @@ public class OrdersController {
         return orderDetailService.getOrderDetailByOrderNo(orderNo);
     }
 
+    @PostMapping("/payOrders")
+    public Result payOrders(@RequestBody PayOrderRequest payOrderRequest, @CookieValue("user_id") int userId) {
+        return ordersService.payOrders(userId, payOrderRequest);
+    }
 }
