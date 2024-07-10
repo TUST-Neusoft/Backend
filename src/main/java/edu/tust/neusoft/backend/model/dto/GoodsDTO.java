@@ -1,6 +1,6 @@
 package edu.tust.neusoft.backend.model.dto;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +17,8 @@ public class GoodsDTO {
     private int goodState;
     private String goodsPicture;
     private double goodsPrice;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    private Date createTime;
+    private Date updateTime;
 
     // Getters and setters
 }

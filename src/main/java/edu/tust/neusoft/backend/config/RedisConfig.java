@@ -1,65 +1,81 @@
 package edu.tust.neusoft.backend.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 
-import java.net.UnknownHostException;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Redis配置类，用于配置Redis缓存相关信息。
+ * 此配置会覆盖掉默认的缓存配置 使用redis管理 access_token
+ *
+ * @author KBEI
+ * @date 2023-12-26 12:14
+ **/
 @Configuration
-public class RedisConfig {
-    //配置我们自己的redisTemplate  固定模板
+@RequiredArgsConstructor
+@EnableCaching
+public class RedisConfig extends CachingConfigurerSupport {
 
-    @Bean
-    @SuppressWarnings("all") //告诉编译器忽略全部的警告，不用在编译完成后出现警告信息
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory)
-            throws UnknownHostException {
+    /**
+     * Redis缓存过期时间映射
+     */
+    private final static Map<String, Long> EXPIRE_MAP = new HashMap<>();
 
-        //我们为了自己开发方便，一般直接使用<String, Object>类型
-        RedisTemplate<String, Object> template = new RedisTemplate<String,Object>();
-        //连接工厂
-        template.setConnectionFactory(factory);
-
-        //Json的序列化配置
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper om = new ObjectMapper(); //JackSon对象
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-
-        //String类型的序列化配置
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-
-
-        //Key采用String的序列化操作
-        template.setKeySerializer(stringRedisSerializer);
-        //Hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        //value序列化采用jackson
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        //Hash的value序列化也采用jackson
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-
-        //配置完之后将所有的properties设置进去
-        template.afterPropertiesSet();
-        return template;
+    static {
+        EXPIRE_MAP.put("qywx", 7200L);
     }
 
+    /**
+     * 配置生成缓存Key的策略。
+     *
+     * @return KeyGenerator实例
+     */
+    @Override
     @Bean
-    @ConditionalOnMissingBean(StringRedisTemplate.class)
-    public StringRedisTemplate stringRedisTemplate(
-            RedisConnectionFactory redisConnectionFactory)
-            throws UnknownHostException {
-        StringRedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
+    public KeyGenerator keyGenerator() {
+        return (target, method, params) -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(target.getClass().getName());
+            sb.append(method.getName());
+            for (Object obj : params) {
+                sb.append(obj.toString());
+            }
+            return sb.toString();
+        };
+    }
+
+    /**
+     * 配置缓存管理器，使用Redis作为缓存存储。
+     *
+     * @param connectionFactory Redis连接工厂
+     * @return 缓存管理器实例
+     */
+    @SuppressWarnings("rawtypes")
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        RedisCacheManager redisCacheManager;
+        Map<String, RedisCacheConfiguration> cacheConfigurationMap = new HashMap<>();
+        EXPIRE_MAP.forEach((key, value) -> {
+            RedisSerializationContext.SerializationPair serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer());
+            RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().prefixCacheNameWith("qywx:")
+                    .serializeValuesWith(serializationPair)
+                    .entryTtl(Duration.ofSeconds(value));
+            cacheConfigurationMap.put(key, redisCacheConfiguration);
+        });
+        redisCacheManager = RedisCacheManager.builder(connectionFactory).withInitialCacheConfigurations(cacheConfigurationMap).build();
+        return redisCacheManager;
     }
 }

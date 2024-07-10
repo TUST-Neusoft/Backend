@@ -1,7 +1,5 @@
 package edu.tust.neusoft.backend.controller;
 
-import edu.tust.neusoft.backend.model.dto.OrderRequest;
-import edu.tust.neusoft.backend.model.dto.PayOrderRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.OrderDetailService;
 import edu.tust.neusoft.backend.service.OrdersService;
@@ -21,18 +19,13 @@ public class OrdersController {
     }
 
     @GetMapping("/getMyOrders")
-    public Result getMyOrders(@CookieValue("user_id") int userId) {
+    public Result getMyOrders(@CookieValue int userId) {
         return ordersService.getOrdersByUserId(userId);
     }
 
     @GetMapping("/getOrders")
-    public Result getOrders(@CookieValue("user_id") int userId, @RequestParam("order_no") String orderNo) {
-        return orderDetailService.getOrderDetailByOrderNoAndUserId(orderNo, userId);
-    }
-
-    @PostMapping("/addOrders")
-    public Result addOrders(@RequestBody OrderRequest orderRequest, @CookieValue("user_id") int userId) {
-        return ordersService.addOrders(userId, orderRequest);
+    public Result getOrders(String orderNo) {
+        return orderDetailService.getOrderDetailByOrderNo(orderNo);
     }
 
     @PostMapping("/payOrders")

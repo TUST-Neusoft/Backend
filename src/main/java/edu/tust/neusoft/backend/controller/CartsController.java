@@ -30,7 +30,7 @@ public class CartsController {
     }
 
     @GetMapping("/deleteCarts")
-    public Result deleteCart(@RequestParam("carts_id") Integer cartId) {
+    public Result deleteCart(Integer cartId) {
         System.out.println("Received carts_id: " + cartId);// 注意参数名匹配请求中的 'carts_id'
         return cartsService.deleteCart(Long.valueOf(cartId));
     }

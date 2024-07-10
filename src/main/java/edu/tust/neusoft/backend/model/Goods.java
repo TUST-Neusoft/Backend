@@ -1,9 +1,8 @@
 package edu.tust.neusoft.backend.model;
-
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Setter
@@ -30,7 +29,7 @@ public class Goods {
     private String goodsContent;
 
     @Column(name = "goods_state")
-    private int goodsState;
+    private int goodState;
 
     @Column(name = "goods_picture")
     private String goodsPicture;
@@ -39,8 +38,10 @@ public class Goods {
     private Double goodsPrice;
 
     @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTime;
 
     @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime;
 }
