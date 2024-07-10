@@ -1,26 +1,28 @@
 package edu.tust.neusoft.backend.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "wallet")
-public class Wallet {
+@Table(name = "goods_category")
+public class GoodsCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id")
-    private int userId;
+    @Column(name = "category_name")
+    private String categoryName;
 
-    @Column(name = "wallet_balance")
-    private double walletBalance;
+    @Column(name = "category_type")
+    private int categoryType;
 
-    @Column(name = "wallet_password")
-    private String walletPassword;
+    @Column(name = "parent_id")
+    private Integer parentId;
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)

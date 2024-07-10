@@ -1,5 +1,6 @@
 package edu.tust.neusoft.backend.service;
 
+import edu.tust.neusoft.backend.model.dto.ResetGoodsRequest;
 import edu.tust.neusoft.backend.response.Result;
 
 public interface GoodsService {
@@ -7,4 +8,6 @@ public interface GoodsService {
     Result getGoodsByGoodsNo(String goodsNo);
     Result searchGoodsByGoodsName(String goodsName);
     boolean existsByGoodsNo(String goodsNo);
+    Result getAllGoods();
+    Result resetGoodsMsg(ResetGoodsRequest resetGoodsRequest);
 }

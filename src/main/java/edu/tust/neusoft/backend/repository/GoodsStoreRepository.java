@@ -2,12 +2,10 @@ package edu.tust.neusoft.backend.repository;
 
 import edu.tust.neusoft.backend.model.GoodsStore;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
-@Repository
-public interface GoodsStoreRepository extends JpaRepository<GoodsStore, Long> {
-    Optional<GoodsStore> findByGoodsNoAndStoreNo(String goodsNo, String storeNo);
+public interface GoodsStoreRepository extends JpaRepository<GoodsStore, Integer> {
+    List<GoodsStore> findByStoreNo(String storeNo);
+    GoodsStore findByStoreNoAndGoodsNo(String storeNo, String goodsNo);
 }
-

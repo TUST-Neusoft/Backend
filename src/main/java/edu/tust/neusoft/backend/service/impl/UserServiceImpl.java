@@ -2,32 +2,36 @@ package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.User;
 import edu.tust.neusoft.backend.model.dto.UpdateUserRequest;
+import edu.tust.neusoft.backend.repository.AdminLoginLogRepository;
+import edu.tust.neusoft.backend.repository.PortalLoginLogRepository;
 import edu.tust.neusoft.backend.repository.UserRepository;
+import edu.tust.neusoft.backend.repository.WalletRepository;
+import edu.tust.neusoft.backend.repository.WalletLogRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.UserService;
-import edu.tust.neusoft.backend.utils.MD5Utils;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    @Resource
-    private StringRedisTemplate redis;
+    private final PortalLoginLogRepository portalLoginLogRepository;
+    private final AdminLoginLogRepository adminLoginLogRepository;
+    private final WalletRepository walletRepository;
+    private final WalletLogRepository walletLogRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PortalLoginLogRepository portalLoginLogRepository, AdminLoginLogRepository adminLoginLogRepository, WalletRepository walletRepository, WalletLogRepository walletLogRepository) {
         this.userRepository = userRepository;
+        this.portalLoginLogRepository = portalLoginLogRepository;
+        this.adminLoginLogRepository = adminLoginLogRepository;
+        this.walletRepository = walletRepository;
+        this.walletLogRepository = walletLogRepository;
     }
 
     @Override
@@ -41,33 +45,45 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result loginByPhone(String phone, String password, HttpServletResponse response) {
+    public Result loginByPhone(String phone, String password, String loginIp) {
         User user = userRepository.findByPhoneAndUserPassword(phone, password);
         if (user != null) {
+            if (user.getUserStatus() != 1) {
+                return Result.fail("用户被冻结");
+            }
+
+            // 记录登录日志
+            PortalLoginLog loginLog = new PortalLoginLog();
+            loginLog.setUserId(user.getId());
+            loginLog.setLoginIp(loginIp);
+            loginLog.setCreateTime(new Date());
+            portalLoginLogRepository.save(loginLog);
+
             user.setUserPassword(null);  // 不返回密码
-            MD5Utils md5Utils = new MD5Utils();
-            String token = md5Utils.generateMd5Token();
-            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
-
-            // 创建并配置 userId Cookie
-            Cookie userIdCookie = new Cookie("userId", String.valueOf(user.getId()));
-            userIdCookie.setHttpOnly(true);
-            userIdCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
-            userIdCookie.setPath("/"); // 设置 Cookie 的路径
-
-            // 创建并配置 token Cookie
-            Cookie tokenCookie = new Cookie("token", token);
-            tokenCookie.setHttpOnly(true);
-            tokenCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
-            tokenCookie.setPath("/"); // 设置 Cookie 的路径
-
-            // 将 Cookies 添加到响应中
-            response.addCookie(userIdCookie);
-            response.addCookie(tokenCookie);
-
             return Result.success("登陆成功", user);
         }
         return Result.fail("登陆失败");
+    }
+
+    @Override
+    public Result adminLoginByPhone(String phone, String password, String loginIp) {
+        User user = userRepository.findByPhoneAndUserPassword(phone, password);
+        if (user != null) {
+            if (user.getUserStatus() != 1) {
+                return Result.fail("用户被冻结");
+            }
+
+            // 记录管理员登录日志
+            AdminLoginLog loginLog = new AdminLoginLog();
+            loginLog.setUserId(user.getId());
+            loginLog.setLoginIp(loginIp);
+            loginLog.setCreateTime(new Date());
+            adminLoginLogRepository.save(loginLog);
+
+            user.setUserPassword(null);  // 不返回密码
+            return Result.success("管理员登陆成功", user);
+        }
+        return Result.fail("管理员登陆失败");
     }
 
     @Override
@@ -93,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getUserById(int userId) {
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(userId)));
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setUserPassword(null);  // 不返回密码
@@ -108,7 +124,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("更新请求不能为空");
         }
 
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(updateUserRequest.getId())));
+        Optional<User> userOptional = userRepository.findById(updateUserRequest.getId());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setPhone(updateUserRequest.getPhone());
@@ -135,7 +151,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result updatePassword(int userId, String userPassword) {
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findById(Long.valueOf(userId)));
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setUserPassword(userPassword);
@@ -150,7 +166,81 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Result getWalletBalance(int userId) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet != null) {
+            return Result.success("获取成功", wallet.getWalletBalance());
+        }
+        return Result.fail("用户钱包不存在");
+    }
+
+    @Override
+    public Result chargeWallet(int userId, double amount) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet != null) {
+            wallet.setWalletBalance(wallet.getWalletBalance() + amount);
+            wallet.setUpdateTime(new Date());
+            walletRepository.save(wallet);
+            return Result.success("充值成功", wallet.getWalletBalance());
+        }
+        return Result.fail("用户钱包不存在");
+    }
+
+    @Override
+    public Result transferMoney(int userId, String targetPhone, double amount) {
+        if (amount <= 0) {
+            return Result.fail("转账金额必须大于零");
+        }
+
+        Wallet senderWallet = walletRepository.findByUserId(userId);
+        if (senderWallet == null) {
+            return Result.fail("发送方用户钱包不存在");
+        }
+
+        if (senderWallet.getWalletBalance() < amount) {
+            return Result.fail("发送方用户钱包余额不足");
+        }
+
+        User targetUser = userRepository.findByPhone(targetPhone).orElse(null);
+        if (targetUser == null) {
+            return Result.fail("目标用户不存在");
+        }
+
+        Wallet receiverWallet = walletRepository.findByUserId(targetUser.getId());
+        if (receiverWallet == null) {
+            return Result.fail("目标用户钱包不存在");
+        }
+
+        senderWallet.setWalletBalance(senderWallet.getWalletBalance() - amount);
+        senderWallet.setUpdateTime(new Date());
+        walletRepository.save(senderWallet);
+
+        receiverWallet.setWalletBalance(receiverWallet.getWalletBalance() + amount);
+        receiverWallet.setUpdateTime(new Date());
+        walletRepository.save(receiverWallet);
+
+        return Result.success("转账成功", null);
+    }
+
+    @Override
+    public Result getWalletLogs(int userId) {
+        Wallet wallet = walletRepository.findByUserId(userId);
+        if (wallet == null) {
+            return Result.fail("用户钱包不存在");
+        }
+
+        List<WalletLog> walletLogs = walletLogRepository.findByWalletId(wallet.getId());
+        return Result.success("获取成功", walletLogs);
+    }
+
+    @Override
     public boolean existsById(int userId) {
         return userRepository.existsById(userId);
+    }
+
+    @Override
+    public Result getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return Result.success("获取成功", users);
     }
 }

@@ -7,20 +7,17 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "wallet")
-public class Wallet {
+@Table(name = "notice_record")
+public class NoticeRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "notice_id")
+    private int noticeId;
+
     @Column(name = "user_id")
     private int userId;
-
-    @Column(name = "wallet_balance")
-    private double walletBalance;
-
-    @Column(name = "wallet_password")
-    private String walletPassword;
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)

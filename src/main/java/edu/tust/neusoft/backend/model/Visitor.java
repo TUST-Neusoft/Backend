@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "wallet")
-public class Wallet {
+@Table(name = "visitor")
+public class Visitor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,11 +16,15 @@ public class Wallet {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "wallet_balance")
-    private double walletBalance;
+    @Column(name = "visitor_objective")
+    private String visitorObjective;
 
-    @Column(name = "wallet_password")
-    private String walletPassword;
+    @Column(name = "visitor_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date visitorTime;
+
+    @Column(name = "visitor_status")
+    private int visitorStatus; // 使用 int 类型
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)

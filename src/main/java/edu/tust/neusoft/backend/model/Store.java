@@ -1,20 +1,22 @@
 package edu.tust.neusoft.backend.model;
+
 import lombok.Getter;
 import lombok.Setter;
-import javax.persistence.*;
-import java.util.Date;
 
-@Entity
-@Setter
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Getter
+@Setter
+@Entity
 @Table(name = "store")
 public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(name = "area_id")
-    private int area_id;
+    private int areaId;
 
     @Column(name = "store_no")
     private String storeNo;
@@ -26,22 +28,22 @@ public class Store {
     private String storeAddress;
 
     @Column(name = "max_longitude")
-    private double maxLongitude;
+    private Double maxLongitude;
 
     @Column(name = "max_latitude")
-    private double maxLatitude;
+    private Double maxLatitude;
 
     @Column(name = "min_longitude")
-    private double minLongitude;
+    private Double minLongitude;
 
     @Column(name = "min_latitude")
-    private double minLatitude;
+    private Double minLatitude;
 
     @Column(name = "longitude")
-    private double Longitude;
+    private Double longitude;
 
     @Column(name = "latitude")
-    private double Latitude;
+    private Double latitude;
 
     @Column(name = "store_introduce")
     private String storeIntroduce;
@@ -56,15 +58,8 @@ public class Store {
     private int storeStatus;
 
     @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "update_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
-
-    public int getAreaId() {
-        return area_id;
-    }
+    private LocalDateTime updateTime;
 }
-

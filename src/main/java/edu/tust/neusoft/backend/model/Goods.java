@@ -20,7 +20,7 @@ public class Goods {
     private String goodsName;
 
     @Column(name = "category_id")
-    private int categoryId;
+    private Integer categoryId; // 修改为 Integer 类型
 
     @Column(name = "goods_introduce")
     private String goodsIntroduce;

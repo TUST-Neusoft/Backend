@@ -9,26 +9,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "goods_store")
-public class GoodsStore {
+@Table(name = "area")
+public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "store_no")
-    private String storeNo;
+    @Column(name = "area_no")
+    private String areaNo;
 
-    @Column(name = "goods_no")
-    private String goodsNo;
+    @Column(name = "area_name")
+    private String areaName;
 
-    @Column(name = "goods_price")
-    private Double goodsPrice;
+    @Column(name = "parent_id")
+    private Integer parentId;
 
-    @Column(name = "goods_stock")
-    private int goodsStock;
-
-    @Column(name = "goods_type")
-    private String goodsType;
+    @Column(name = "area_type")
+    private int areaType;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;

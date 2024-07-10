@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "wallet")
-public class Wallet {
+@Table(name = "admin_login_log")
+public class AdminLoginLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -16,17 +16,10 @@ public class Wallet {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "wallet_balance")
-    private double walletBalance;
-
-    @Column(name = "wallet_password")
-    private String walletPassword;
+    @Column(name = "login_ip")
+    private String loginIp;
 
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
-
-    @Column(name = "update_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
 }
