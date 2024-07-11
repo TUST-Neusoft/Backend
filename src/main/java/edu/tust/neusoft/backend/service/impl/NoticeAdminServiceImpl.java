@@ -1,6 +1,6 @@
 package edu.tust.neusoft.backend.service.impl;
 
-import edu.tust.neusoft.backend.model.Notice;
+import edu.tust.neusoft.backend.model.NoticeAdmin;
 import edu.tust.neusoft.backend.model.dto.NoticeRequest;
 import edu.tust.neusoft.backend.repository.NoticeRepository;
 import edu.tust.neusoft.backend.response.Result;
@@ -23,45 +23,52 @@ public class NoticeAdminServiceImpl implements NoticeAdminService {
 
     @Override
     public Result getAllNotices() {
-        List<Notice> notices = noticeRepository.findAll();
-        return Result.success("获取成功", notices);
+        List<NoticeAdmin> noticeAdmins = noticeRepository.findAll();
+        return Result.success("获取成功", noticeAdmins);
     }
 
     @Override
     public Result addNotice(NoticeRequest noticeRequest) {
-        Notice notice = new Notice();
-        notice.setNoticeTitle(noticeRequest.getNoticeTitle());
-        notice.setNoticeContent(noticeRequest.getNoticeContent());
-        notice.setNoticeStatus(noticeRequest.getNoticeStatus());
-        notice.setCreateTime(LocalDateTime.now());
-        notice.setUpdateTime(LocalDateTime.now());
-        noticeRepository.save(notice);
-        return Result.success("添加成功", notice);
+        NoticeAdmin noticeAdmin = new NoticeAdmin();
+        noticeAdmin.setNoticeTitle(noticeRequest.getNoticeTitle());
+        noticeAdmin.setNoticeContent(noticeRequest.getNoticeContent());
+        noticeAdmin.setNoticeStatus(noticeRequest.getNoticeStatus());
+        noticeAdmin.setCreateTime(LocalDateTime.now());
+        noticeAdmin.setUpdateTime(LocalDateTime.now());
+        noticeRepository.save(noticeAdmin);
+        return Result.success("添加成功", noticeAdmin);
     }
 
     @Override
     public Result closeNoticeStatus(String noticeTitle) {
-        Optional<Notice> optionalNotice = noticeRepository.findByNoticeTitle(noticeTitle);
+        Optional<NoticeAdmin> optionalNotice = noticeRepository.findByNoticeTitle(noticeTitle);
         if (optionalNotice.isPresent()) {
-            Notice notice = optionalNotice.get();
-            notice.setNoticeStatus(0); // 修改通知状态为0
-            notice.setUpdateTime(LocalDateTime.now());
-            noticeRepository.save(notice);
-            return Result.success("状态已更新", notice);
+            NoticeAdmin noticeAdmin = optionalNotice.get();
+            noticeAdmin.setNoticeStatus(0); // 修改通知状态为0
+            noticeAdmin.setUpdateTime(LocalDateTime.now());
+            noticeRepository.save(noticeAdmin);
+            return Result.success("状态已更新", noticeAdmin);
         } else {
+            // 增加日志打印
+            System.out.println("查询参数: " + noticeTitle);
+            List<NoticeAdmin> allNotices = noticeRepository.findAll();
+            for (NoticeAdmin notice : allNotices) {
+                System.out.println("数据库中的通知: " + notice.getNoticeTitle());
+            }
             return Result.fail("未找到指定的通知");
         }
     }
 
+
     @Override
     public Result openNoticeStatus(String noticeTitle) {
-        Optional<Notice> optionalNotice = noticeRepository.findByNoticeTitle(noticeTitle);
+        Optional<NoticeAdmin> optionalNotice = noticeRepository.findByNoticeTitle(noticeTitle);
         if (optionalNotice.isPresent()) {
-            Notice notice = optionalNotice.get();
-            notice.setNoticeStatus(1); // 修改通知状态为1
-            notice.setUpdateTime(LocalDateTime.now());
-            noticeRepository.save(notice);
-            return Result.success("状态已更新", notice);
+            NoticeAdmin noticeAdmin = optionalNotice.get();
+            noticeAdmin.setNoticeStatus(1); // 修改通知状态为1
+            noticeAdmin.setUpdateTime(LocalDateTime.now());
+            noticeRepository.save(noticeAdmin);
+            return Result.success("状态已更新", noticeAdmin);
         } else {
             return Result.fail("未找到指定的通知");
         }

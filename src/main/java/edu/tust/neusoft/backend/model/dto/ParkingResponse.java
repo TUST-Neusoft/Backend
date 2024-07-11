@@ -1,6 +1,6 @@
 package edu.tust.neusoft.backend.model.dto;
 
-import edu.tust.neusoft.backend.model.ParkingBind;
+import edu.tust.neusoft.backend.model.ParkingBindAdmin;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,5 +15,5 @@ public class ParkingResponse {
     private int parkingStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private List<ParkingBind> parkingBinds;
+    private List<ParkingBindAdmin> parkingBindAdmins;
 }

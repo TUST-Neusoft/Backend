@@ -1,6 +1,6 @@
 package edu.tust.neusoft.backend.service.impl;
 
-import edu.tust.neusoft.backend.model.Visitor;
+import edu.tust.neusoft.backend.model.VisitorAdmin;
 import edu.tust.neusoft.backend.repository.VisitorRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.VisitorRecordsService;
@@ -22,22 +22,22 @@ public class VisitorRecordsServiceImpl implements VisitorRecordsService {
 
     @Override
     public Result getAllVisitorRecordsByUserId(Long userId) {
-        List<Visitor> visitorList = visitorRepository.findByUserId(userId);
-        if (visitorList.isEmpty()) {
+        List<VisitorAdmin> visitorAdminList = visitorRepository.findByUserId(userId);
+        if (visitorAdminList.isEmpty()) {
             return Result.fail("没有找到访客记录");
         }
-        return Result.success("获取成功", visitorList);
+        return Result.success("获取成功", visitorAdminList);
     }
 
     @Override
     public Result changeVisitorStatus(Long id) {
-        Optional<Visitor> optionalVisitor = visitorRepository.findById(id);
+        Optional<VisitorAdmin> optionalVisitor = visitorRepository.findById(id);
         if (optionalVisitor.isPresent()) {
-            Visitor visitor = optionalVisitor.get();
-            visitor.setVisitorStatus(1); // 修改访客状态为1
-            visitor.setUpdateTime(LocalDateTime.now());
-            visitorRepository.save(visitor);
-            return Result.success("已来访", visitor);
+            VisitorAdmin visitorAdmin = optionalVisitor.get();
+            visitorAdmin.setVisitorStatus(1); // 修改访客状态为1
+            visitorAdmin.setUpdateTime(LocalDateTime.now());
+            visitorRepository.save(visitorAdmin);
+            return Result.success("已来访", visitorAdmin);
         } else {
             return Result.fail("未找到指定的访客记录");
         }

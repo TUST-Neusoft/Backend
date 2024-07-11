@@ -1,7 +1,7 @@
 package edu.tust.neusoft.backend.service.impl;
 
-import edu.tust.neusoft.backend.model.Parking;
-import edu.tust.neusoft.backend.model.ParkingBind;
+import edu.tust.neusoft.backend.model.ParkingAdmin;
+import edu.tust.neusoft.backend.model.ParkingBindAdmin;
 import edu.tust.neusoft.backend.model.dto.ParkingResponse;
 import edu.tust.neusoft.backend.repository.ParkingBindRepository;
 import edu.tust.neusoft.backend.repository.ParkingRepository;
@@ -26,18 +26,18 @@ public class ParkAdminServiceImpl implements ParkAdminService {
 
     @Override
     public Result getAllParkingByUserId(Long userId) {
-        List<Parking> parkings = parkingRepository.findByUserId(userId);
-        List<ParkingResponse> responseList = parkings.stream().map(parking -> {
-            List<ParkingBind> parkingBinds = parkingBindRepository.findByParkingId(parking.getId());
+        List<ParkingAdmin> parkingAdmins = parkingRepository.findByUserId(userId);
+        List<ParkingResponse> responseList = parkingAdmins.stream().map(parkingAdmin -> {
+            List<ParkingBindAdmin> parkingBindAdmins = parkingBindRepository.findByParkingId(parkingAdmin.getId());
             ParkingResponse response = new ParkingResponse();
-            response.setId(parking.getId());
-            response.setUserId(parking.getUserId());
-            response.setParkingName(parking.getParkingName());
-            response.setParkingType(parking.getParkingType());
-            response.setParkingStatus(parking.getParkingStatus());
-            response.setCreateTime(parking.getCreateTime());
-            response.setUpdateTime(parking.getUpdateTime());
-            response.setParkingBinds(parkingBinds);
+            response.setId(parkingAdmin.getId());
+            response.setUserId(parkingAdmin.getUserId());
+            response.setParkingName(parkingAdmin.getParkingName());
+            response.setParkingType(parkingAdmin.getParkingType());
+            response.setParkingStatus(parkingAdmin.getParkingStatus());
+            response.setCreateTime(parkingAdmin.getCreateTime());
+            response.setUpdateTime(parkingAdmin.getUpdateTime());
+            response.setParkingBindAdmins(parkingBindAdmins);
             return response;
         }).collect(Collectors.toList());
 

@@ -8,17 +8,20 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "parking_bind")
-public class ParkingBind {
+@Table(name = "notice")
+public class NoticeAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "parking_id")
-    private Long parkingId;
+    @Column(name = "notice_title")
+    private String noticeTitle;
 
-    @Column(name = "license_plate")
-    private String licensePlate;
+    @Column(name = "notice_content")
+    private String noticeContent;
+
+    @Column(name = "notice_status")
+    private int noticeStatus;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;

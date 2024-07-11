@@ -8,26 +8,20 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "charge")
-public class Charge {
+@Table(name = "complaint")
+public class ComplaintAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "charge_no")
-    private String chargeNo;
-
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "charge_name")
-    private String chargeName;
+    @Column(name = "complaint_content")
+    private String complaintContent;
 
-    @Column(name = "charge_status")
-    private int chargeStatus;
-
-    @Column(name = "total_price")
-    private double totalPrice;
+    @Column(name = "complaint_status")
+    private int complaintStatus;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;

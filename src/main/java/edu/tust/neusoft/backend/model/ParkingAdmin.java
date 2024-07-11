@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "complaint")
-public class Complaint {
+@Table(name = "parking")
+public class ParkingAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,11 +17,14 @@ public class Complaint {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "complaint_content")
-    private String complaintContent;
+    @Column(name = "parking_name")
+    private String parkingName;
 
-    @Column(name = "complaint_status")
-    private int complaintStatus;
+    @Column(name = "parking_type")
+    private String parkingType;
+
+    @Column(name = "parking_status")
+    private int parkingStatus;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
@@ -29,3 +32,4 @@ public class Complaint {
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 }
+

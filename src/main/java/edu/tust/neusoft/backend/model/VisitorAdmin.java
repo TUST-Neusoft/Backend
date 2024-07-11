@@ -8,20 +8,23 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-@Table(name = "charge_detail")
-public class ChargeDetail {
+@Table(name = "visitor")
+public class VisitorAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "charge_no")
-    private String chargeNo;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @Column(name = "charge_content")
-    private String chargeContent;
+    @Column(name = "visitor_objective")
+    private String visitorObjective;
 
-    @Column(name = "charge_price")
-    private double chargePrice;
+    @Column(name = "visitor_time")
+    private LocalDateTime visitorTime;
+
+    @Column(name = "visitor_status")
+    private int visitorStatus;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
@@ -29,3 +32,4 @@ public class ChargeDetail {
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 }
+

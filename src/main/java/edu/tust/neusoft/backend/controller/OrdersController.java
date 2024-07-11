@@ -1,5 +1,6 @@
 package edu.tust.neusoft.backend.controller;
 
+import edu.tust.neusoft.backend.model.dto.OrderRequest;
 import edu.tust.neusoft.backend.model.dto.PayOrderRequest;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.OrderDetailService;
