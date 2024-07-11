@@ -2,6 +2,8 @@ package edu.tust.neusoft.backend.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,10 @@ import lombok.Setter;
 
 public class GoodsDTO {
     private Long id;
+
+    @JsonProperty("goods_no")
     private String goodsNo;
+
     private String goodsName;
     private int categoryId;
     private String goodsIntroduce;

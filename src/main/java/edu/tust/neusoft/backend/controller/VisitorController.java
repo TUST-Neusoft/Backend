@@ -21,7 +21,7 @@ public class VisitorController {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
-        return visitorService.getMyVisitor(userId);
+        return visitorService.getMyVisitor((long)userId);
     }
 
     @PostMapping("/addVisitor")
@@ -29,6 +29,6 @@ public class VisitorController {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
-        return visitorService.addVisitor(userId, request);
+        return visitorService.addVisitor((long)userId, request);
     }
 }

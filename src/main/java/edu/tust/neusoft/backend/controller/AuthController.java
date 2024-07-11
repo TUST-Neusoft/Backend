@@ -26,6 +26,7 @@ public class AuthController {
     private final UserService userService;
     @Resource
     private StringRedisTemplate redis;
+
     public AuthController(UserService userService) {
         this.userService = userService;
     }
@@ -43,10 +44,10 @@ public class AuthController {
             User user = (User) result.getData();
             MD5Utils md5Utils = new MD5Utils();
             String token = md5Utils.generateMd5Token();
-            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
+//            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
 
             // 创建并配置 userId Cookie
-            Cookie userIdCookie = new Cookie("userId", String.valueOf(user.getId()));
+            Cookie userIdCookie = new Cookie("user_id", String.valueOf(user.getId()));
             userIdCookie.setHttpOnly(true);
             userIdCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
             userIdCookie.setPath("/"); // 设置 Cookie 的路径
@@ -69,3 +70,4 @@ public class AuthController {
         return userService.forgetPassword(forgetRequest.getPhone(), forgetRequest.getPassword(), forgetRequest.getUserName());
     }
 }
+

@@ -17,15 +17,15 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public Result getCurrentUser(@CookieValue int userId) {
+    public Result getCurrentUser(@CookieValue("user_id") int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
-        return userService.getUserById(userId);
+        return userService.getUserById((long)userId);
     }
 
     @PostMapping("/updateUser")
-    public Result updateUser(@CookieValue int userId, @RequestBody UpdateUserRequest updateUserRequest) {
+    public Result updateUser(@CookieValue("user_id") int userId, @RequestBody UpdateUserRequest updateUserRequest) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -39,13 +39,13 @@ public class UserController {
     }
 
     @GetMapping("/updatePassword")
-    public Result updatePassword(@CookieValue int userId, @RequestParam String userPassword) {
+    public Result updatePassword(@CookieValue("user_id") int userId, @RequestParam("user_password") String userPassword) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
         if (userPassword == null || userPassword.isEmpty()) {
             return Result.fail("密码不能为空");
         }
-        return userService.updatePassword(userId, userPassword);
+        return userService.updatePassword((long)userId, userPassword);
     }
 }
