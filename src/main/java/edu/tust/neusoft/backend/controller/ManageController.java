@@ -53,7 +53,7 @@ public class ManageController {
     }
 
     @GetMapping("/StoreGoods")
-    public Result getGoodsByStoreNo(@RequestParam("store_no") String storeNo) {
+    public Result getGoodsByStoreNo(@RequestParam String storeNo) {
         return goodsStoreService.getGoodsByStoreNo(storeNo);
     }
 

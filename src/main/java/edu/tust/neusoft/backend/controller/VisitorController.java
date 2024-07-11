@@ -17,7 +17,7 @@ public class VisitorController {
     }
 
     @GetMapping("/getMyVisitor")
-    public Result getMyVisitor(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getMyVisitor(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -25,7 +25,7 @@ public class VisitorController {
     }
 
     @PostMapping("/addVisitor")
-    public Result addVisitor(@CookieValue(value = "user_id", defaultValue = "-1") int userId, @RequestBody AddVisitorRequest request) {
+    public Result addVisitor(@CookieValue int userId, @RequestBody AddVisitorRequest request) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

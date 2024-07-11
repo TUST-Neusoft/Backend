@@ -26,7 +26,7 @@ public class GoodsFavoritesController {
     }
 
     @GetMapping("/getFavoritesNum")
-    public Result getFavoritesCountByGoodsNo(@RequestParam("goods_no") String goodsNo) {
+    public Result getFavoritesCountByGoodsNo(@RequestParam String goodsNo) {
         if (goodsNo == null || goodsNo.isEmpty()) {
             return Result.fail("goods_no 参数不能为空");
         }
@@ -34,7 +34,7 @@ public class GoodsFavoritesController {
     }
 
     @GetMapping("/getMyFavorites")
-    public Result getUserFavorites(@CookieValue("user_id") int userId) {
+    public Result getUserFavorites(@CookieValue int userId) {
         return goodsFavoritesService.getFavoritesByUserId(userId);
     }
 
@@ -62,7 +62,7 @@ public class GoodsFavoritesController {
     }
 
     @GetMapping("/deleteFavorites")
-    public Result deleteFavorite(@RequestParam("favorites_id") int favoritesId) {
+    public Result deleteFavorite(@RequestParam int favoritesId) {
         boolean exists = goodsFavoritesService.existsById(favoritesId);
         if (!exists) {
             return Result.fail("收藏记录不存在");

@@ -17,7 +17,7 @@ public class WalletController {
     }
 
     @GetMapping("/getMyWallet")
-    public Result getWalletBalance(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getWalletBalance(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -25,7 +25,7 @@ public class WalletController {
     }
 
     @PostMapping("/chargeMoney")
-    public Result chargeWallet(@CookieValue(value = "user_id", defaultValue = "-1") int userId, @RequestParam("money") double amount) {
+    public Result chargeWallet(@CookieValue int userId, @RequestParam double amount) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -36,7 +36,7 @@ public class WalletController {
     }
 
     @PostMapping("/transferMoney")
-    public Result transferMoney(@CookieValue(value = "user_id", defaultValue = "-1") int userId, @RequestBody TransferMoneyRequest transferMoneyRequest) {
+    public Result transferMoney(@CookieValue int userId, @RequestBody TransferMoneyRequest transferMoneyRequest) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

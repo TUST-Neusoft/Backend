@@ -24,7 +24,7 @@ public class GoodsController {
     }
 
     @GetMapping("/getDetail")
-    public Result getGoodsByGoodsNo(@RequestParam("goods_no") String goodsNo) {
+    public Result getGoodsByGoodsNo(String goodsNo) {
         if (goodsNo == null || goodsNo.isEmpty()) {
             return Result.fail("goodsNo参数不能为空");
         }
@@ -32,7 +32,7 @@ public class GoodsController {
     }
 
     @GetMapping("/search")
-    public Result searchGoodsByGoodsName(@RequestParam("goods_name") String goodsName) {
+    public Result searchGoodsByGoodsName(String goodsName) {
         if (goodsName == null || goodsName.isEmpty()) {
             return Result.fail("goodsName参数不能为空");
         }

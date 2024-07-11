@@ -27,12 +27,12 @@ public class NoticeAdminController {
     }
 
     @PostMapping("/closeStatus")
-    public Result closeNoticeStatus(@RequestParam("notice_title") String noticeTitle) {
+    public Result closeNoticeStatus(@RequestParam String noticeTitle) {
         return noticeAdminService.closeNoticeStatus(noticeTitle);
     }
 
     @PostMapping("/openStatus")
-    public Result openNoticeStatus(@RequestParam("notice_title") String noticeTitle) {
+    public Result openNoticeStatus(@RequestParam String noticeTitle) {
         return noticeAdminService.openNoticeStatus(noticeTitle);
     }
 }

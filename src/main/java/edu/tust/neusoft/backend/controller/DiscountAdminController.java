@@ -29,12 +29,12 @@ public class DiscountAdminController {
     }
 
     @DeleteMapping("/deletegoods")
-    public Result deleteGoods(@RequestParam("goods_no") String goodsNo) {
+    public Result deleteGoods(@RequestParam String goodsNo) {
         return goodsAdminService.deleteGoodsByGoodsNo(goodsNo);
     }
 
     @PostMapping("/addgoods")
-    public Result addGoods(@RequestParam("goods_no") String goodsNo) {
+    public Result addGoods(@RequestParam String goodsNo) {
         return goodsAdminService.addGoodsByGoodsNo(goodsNo);
     }
 }

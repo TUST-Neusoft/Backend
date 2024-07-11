@@ -16,7 +16,7 @@ public class WalletLogController {
     }
 
     @GetMapping("/getWalletLogs")
-    public Result getWalletLogs(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getWalletLogs(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

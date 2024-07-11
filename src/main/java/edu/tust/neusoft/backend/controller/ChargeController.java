@@ -16,7 +16,7 @@ public class ChargeController {
     }
 
     @GetMapping("/getMyCharge")
-    public Result getMyCharge(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getMyCharge(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

@@ -115,7 +115,7 @@ public class OrdersServiceImpl implements OrdersService {
     public Result payOrders(int userId, PayOrderRequest payOrderRequest) {
         // 查询钱包信息
         Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
-        if (optionalWallet.isEmpty()) {
+        if (optionalWallet.isPresent()) {
             return Result.fail("未找到用户钱包信息");
         }
 
@@ -128,7 +128,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         // 查询订单信息
         Optional<Orders> optionalOrder = ordersRepository.findById(Integer.parseInt(payOrderRequest.getOrdersId()));
-        if (optionalOrder.isEmpty()) {
+        if (optionalOrder.isPresent()) {
             return Result.fail("未找到对应的订单");
         }
 

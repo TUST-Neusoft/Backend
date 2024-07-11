@@ -16,17 +16,17 @@ public class OrderAdminController {
     }
 
     @GetMapping("/getAllorder")
-    public Result getAllOrders(@CookieValue("user_id") int userId) {
+    public Result getAllOrders(@CookieValue int userId) {
         return orderAdminService.getAllOrdersByUserId(userId);
     }
 
     @GetMapping("/getDetail")
-    public Result getOrderDetail(@RequestParam("order_no") String orderNo) {
+    public Result getOrderDetail(@RequestParam String orderNo) {
         return orderAdminService.getOrderDetailByOrderNo(orderNo);
     }
 
     @PostMapping("/changeStatus")
-    public Result changeOrderStatus(@RequestParam("order_no") String orderNo) {
+    public Result changeOrderStatus(@RequestParam String orderNo) {
         return orderAdminService.changeOrderStatus(orderNo);
     }
 }

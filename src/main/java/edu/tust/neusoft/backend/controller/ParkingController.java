@@ -17,7 +17,7 @@ public class ParkingController {
     }
 
     @GetMapping("/getMyParking")
-    public Result getMyParking(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getMyParking(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

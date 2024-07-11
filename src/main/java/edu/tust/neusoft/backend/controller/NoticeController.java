@@ -21,7 +21,7 @@ public class NoticeController {
     }
 
     @GetMapping("/read")
-    public Result getNoticeRecords(@RequestParam("notice_id") int noticeId) {
+    public Result getNoticeRecords(@RequestParam int noticeId) {
         return noticeService.getNoticeRecords(noticeId);
     }
 }

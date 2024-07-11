@@ -11,12 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(verifyLogin())
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/api/auth/login","/api/auth/register");
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(verifyLogin())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/auth/login","/api/auth/register");
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

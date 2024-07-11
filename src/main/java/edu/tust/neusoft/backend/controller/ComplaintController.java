@@ -17,7 +17,7 @@ public class ComplaintController {
     }
 
     @GetMapping("/getMyComplaint")
-    public Result getMyComplaint(@CookieValue(value = "user_id", defaultValue = "-1") int userId) {
+    public Result getMyComplaint(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -25,7 +25,7 @@ public class ComplaintController {
     }
 
     @PostMapping("/addComplaint")
-    public Result addComplaint(@CookieValue(value = "user_id", defaultValue = "-1") int userId, @RequestBody AddComplaintRequest request) {
+    public Result addComplaint(@CookieValue int userId, @RequestBody AddComplaintRequest request) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }

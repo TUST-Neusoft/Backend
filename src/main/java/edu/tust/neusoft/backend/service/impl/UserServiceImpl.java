@@ -41,7 +41,12 @@ public class UserServiceImpl implements UserService {
         if (existingUser.isPresent()) {
             return Result.fail("手机号已存在！");
         }
-        userRepository.save(user);
+        User user2 = userRepository.save(user);
+        Wallet wallet = new Wallet();
+        wallet.setUserId(Math.toIntExact(user2.getId()));
+        wallet.setWalletBalance(0);
+        wallet.setWalletPassword("123456");
+        walletRepository.save(wallet);
         return Result.success("注册成功", user);
     }
 

@@ -16,12 +16,12 @@ public class RepairController {
     }
 
     @GetMapping("/getAll")
-    public Result getAllComplaints(@CookieValue("user_id") Long userId) {
+    public Result getAllComplaints(@CookieValue Long userId) {
         return repairService.getAllComplaintsByUserId(userId);
     }
 
     @PostMapping("/changeStatus")
-    public Result changeComplaintStatus(@RequestParam("id") Long id) {
+    public Result changeComplaintStatus(@RequestParam Long id) {
         return repairService.changeComplaintStatus(id);
     }
 }

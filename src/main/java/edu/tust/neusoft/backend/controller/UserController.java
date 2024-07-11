@@ -17,7 +17,7 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public Result getCurrentUser(@CookieValue("user_id") int userId) {
+    public Result getCurrentUser(@CookieValue int userId) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-    public Result updateUser(@CookieValue("user_id") int userId, @RequestBody UpdateUserRequest updateUserRequest) {
+    public Result updateUser(@CookieValue int userId, @RequestBody UpdateUserRequest updateUserRequest) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/updatePassword")
-    public Result updatePassword(@CookieValue("user_id") int userId, @RequestParam("user_password") String userPassword) {
+    public Result updatePassword(@CookieValue int userId, @RequestParam String userPassword) {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
