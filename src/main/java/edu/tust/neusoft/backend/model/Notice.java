@@ -3,13 +3,12 @@ package edu.tust.neusoft.backend.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "notice")
-public class NoticeAdmin {
+public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -24,8 +23,10 @@ public class NoticeAdmin {
     private int noticeStatus;
 
     @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTime;
 
     @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateTime;
 }

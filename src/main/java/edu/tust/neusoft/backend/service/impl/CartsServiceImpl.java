@@ -64,7 +64,7 @@ public class CartsServiceImpl implements CartsService {
 
             // Assemble DTOs
             GoodsDTO goodsDTO = new GoodsDTO();
-            goodsDTO.setId(goods.getId());
+            goodsDTO.setId(Long.valueOf(goods.getId()));
             goodsDTO.setGoodsNo(goods.getGoodsNo());
             goodsDTO.setGoodsName(goods.getGoodsName());
             goodsDTO.setCategoryId(goods.getCategoryId());
