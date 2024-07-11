@@ -47,7 +47,7 @@ public class AuthController {
             redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
 
             // 创建并配置 userId Cookie
-            Cookie userIdCookie = new Cookie("user_id", String.valueOf(user.getId()));
+            Cookie userIdCookie = new Cookie("userId", String.valueOf(user.getId()));
             userIdCookie.setHttpOnly(true);
             userIdCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 设置 Cookie 有效期为 1 天
             userIdCookie.setPath("/"); // 设置 Cookie 的路径
