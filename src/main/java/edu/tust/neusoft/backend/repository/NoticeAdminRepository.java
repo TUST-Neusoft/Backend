@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface NoticeRepository extends JpaRepository<NoticeAdmin, Long> {
+public interface NoticeAdminRepository extends JpaRepository<NoticeAdmin, Long> {
     Optional<NoticeAdmin> findByNoticeTitle(String noticeTitle);
 }

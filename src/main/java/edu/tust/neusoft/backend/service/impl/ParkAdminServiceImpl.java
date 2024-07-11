@@ -4,7 +4,7 @@ import edu.tust.neusoft.backend.model.ParkingAdmin;
 import edu.tust.neusoft.backend.model.ParkingBindAdmin;
 import edu.tust.neusoft.backend.model.dto.ParkingResponse;
 import edu.tust.neusoft.backend.repository.ParkingBindRepository;
-import edu.tust.neusoft.backend.repository.ParkingRepository;
+import edu.tust.neusoft.backend.repository.ParkingAdminRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.ParkAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +15,18 @@ import java.util.stream.Collectors;
 
 @Service
 public class ParkAdminServiceImpl implements ParkAdminService {
-    private final ParkingRepository parkingRepository;
+    private final ParkingAdminRepository parkingAdminRepository;
     private final ParkingBindRepository parkingBindRepository;
 
     @Autowired
-    public ParkAdminServiceImpl(ParkingRepository parkingRepository, ParkingBindRepository parkingBindRepository) {
-        this.parkingRepository = parkingRepository;
+    public ParkAdminServiceImpl(ParkingAdminRepository parkingAdminRepository, ParkingBindRepository parkingBindRepository) {
+        this.parkingAdminRepository = parkingAdminRepository;
         this.parkingBindRepository = parkingBindRepository;
     }
 
     @Override
     public Result getAllParkingByUserId(Long userId) {
-        List<ParkingAdmin> parkingAdmins = parkingRepository.findByUserId(userId);
+        List<ParkingAdmin> parkingAdmins = parkingAdminRepository.findByUserId(userId);
         List<ParkingResponse> responseList = parkingAdmins.stream().map(parkingAdmin -> {
             List<ParkingBindAdmin> parkingBindAdmins = parkingBindRepository.findByParkingId(parkingAdmin.getId());
             ParkingResponse response = new ParkingResponse();

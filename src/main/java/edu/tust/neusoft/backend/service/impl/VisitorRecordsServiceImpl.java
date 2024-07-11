@@ -1,7 +1,7 @@
 package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.VisitorAdmin;
-import edu.tust.neusoft.backend.repository.VisitorRepository;
+import edu.tust.neusoft.backend.repository.VisitorAdminRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.VisitorRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +13,16 @@ import java.util.Optional;
 
 @Service
 public class VisitorRecordsServiceImpl implements VisitorRecordsService {
-    private final VisitorRepository visitorRepository;
+    private final VisitorAdminRepository visitorAdminRepository;
 
     @Autowired
-    public VisitorRecordsServiceImpl(VisitorRepository visitorRepository) {
-        this.visitorRepository = visitorRepository;
+    public VisitorRecordsServiceImpl(VisitorAdminRepository visitorAdminRepository) {
+        this.visitorAdminRepository = visitorAdminRepository;
     }
 
     @Override
     public Result getAllVisitorRecordsByUserId(Long userId) {
-        List<VisitorAdmin> visitorAdminList = visitorRepository.findByUserId(userId);
+        List<VisitorAdmin> visitorAdminList = visitorAdminRepository.findByUserId(userId);
         if (visitorAdminList.isEmpty()) {
             return Result.fail("没有找到访客记录");
         }
@@ -31,12 +31,12 @@ public class VisitorRecordsServiceImpl implements VisitorRecordsService {
 
     @Override
     public Result changeVisitorStatus(Long id) {
-        Optional<VisitorAdmin> optionalVisitor = visitorRepository.findById(id);
+        Optional<VisitorAdmin> optionalVisitor = visitorAdminRepository.findById(id);
         if (optionalVisitor.isPresent()) {
             VisitorAdmin visitorAdmin = optionalVisitor.get();
             visitorAdmin.setVisitorStatus(1); // 修改访客状态为1
             visitorAdmin.setUpdateTime(LocalDateTime.now());
-            visitorRepository.save(visitorAdmin);
+            visitorAdminRepository.save(visitorAdmin);
             return Result.success("已来访", visitorAdmin);
         } else {
             return Result.fail("未找到指定的访客记录");

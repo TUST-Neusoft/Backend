@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VisitorRepository extends JpaRepository<VisitorAdmin, Long> {
+public interface VisitorAdminRepository extends JpaRepository<VisitorAdmin, Long> {
     List<VisitorAdmin> findByUserId(Long userId);
     Optional<VisitorAdmin> findById(Long id);
 }
