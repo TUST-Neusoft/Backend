@@ -10,4 +10,6 @@ public interface GoodsService {
     Result searchGoodsByGoodsName(String goodsName);
     boolean existsByGoodsNo(String goodsNo);
     Result resetGoodsMsg(ResetGoodsRequest resetGoodsRequest);
+    Result getGoodsStoreByGoodsNo(String goodsNo); // 新增的方法
 }
+

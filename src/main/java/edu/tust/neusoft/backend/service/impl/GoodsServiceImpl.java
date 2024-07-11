@@ -1,9 +1,11 @@
 package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.Goods;
+import edu.tust.neusoft.backend.model.GoodsStore;
 import edu.tust.neusoft.backend.model.dto.ResetGoodsRequest;
 import edu.tust.neusoft.backend.repository.GoodsPictureRepository;
 import edu.tust.neusoft.backend.repository.GoodsRepository;
+import edu.tust.neusoft.backend.repository.GoodsStoreRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,14 @@ import java.util.List;
 @Service
 public class GoodsServiceImpl implements GoodsService {
     private final GoodsRepository goodsRepository;
+    private final GoodsStoreRepository goodsStoreRepository;
     private final GoodsPictureRepository goodsPictureRepository;
     private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
     @Autowired
-    public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsPictureRepository goodsPictureRepository) {
+    public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsStoreRepository goodsStoreRepository, GoodsPictureRepository goodsPictureRepository) {
         this.goodsRepository = goodsRepository;
+        this.goodsStoreRepository = goodsStoreRepository;
         this.goodsPictureRepository = goodsPictureRepository;
     }
 
@@ -100,4 +104,14 @@ public class GoodsServiceImpl implements GoodsService {
 
         return Result.success("商品信息更新成功", goods);
     }
+
+    @Override
+    public Result getGoodsStoreByGoodsNo(String goodsNo) {
+        List<GoodsStore> goodsStoreList = goodsStoreRepository.findByGoodsNo(goodsNo);
+        if (goodsStoreList.isEmpty()) {
+            return Result.fail("未找到指定的商品库存信息");
+        }
+        return Result.success("获取成功", goodsStoreList);
+    }
 }
+

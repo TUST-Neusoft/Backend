@@ -49,4 +49,5 @@ public class GoodsStoreServiceImpl implements GoodsStoreService {
         return Result.success("商品信息更新成功", goodsStore);
     }
 
+
 }
