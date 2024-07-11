@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 
 public class GoodsDTO {
-    private Long id;
+    private Integer id;
     private String goodsNo;
     private String goodsName;
     private int categoryId;

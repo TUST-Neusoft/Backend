@@ -12,7 +12,7 @@ import java.util.Date;
 public class Goods {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "goods_no")
     private String goodsNo;

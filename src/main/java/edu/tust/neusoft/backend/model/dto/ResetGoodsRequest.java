@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class ResetGoodsRequest {
     @JsonProperty("goods_id")
-    private int goodsId;
+    private Integer goodsId;
     @JsonProperty("goods")
     private List<GoodsDto> goods;
 
@@ -19,6 +19,8 @@ public class ResetGoodsRequest {
     public static class GoodsDto {
         @JsonProperty("goods_name")
         private String goodsName;
+        @JsonProperty("goods_no")
+        private String goodsNo;
         @JsonProperty("category_id")
         private int categoryId;
         @JsonProperty("goods_introduce")
@@ -31,5 +33,6 @@ public class ResetGoodsRequest {
         private String goodsPicture;
         @JsonProperty("goods_market_price")
         private double goodsMarketPrice;
+
     }
 }

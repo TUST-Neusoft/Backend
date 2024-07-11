@@ -2,12 +2,15 @@ package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.Goods;
 import edu.tust.neusoft.backend.model.dto.ResetGoodsRequest;
+import edu.tust.neusoft.backend.repository.GoodsPictureRepository;
 import edu.tust.neusoft.backend.repository.GoodsRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,9 +18,13 @@ import java.util.List;
 @Service
 public class GoodsServiceImpl implements GoodsService {
     private final GoodsRepository goodsRepository;
+    private final GoodsPictureRepository goodsPictureRepository;
+    private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 
-    public GoodsServiceImpl(GoodsRepository goodsRepository) {
+    @Autowired
+    public GoodsServiceImpl(GoodsRepository goodsRepository, GoodsPictureRepository goodsPictureRepository) {
         this.goodsRepository = goodsRepository;
+        this.goodsPictureRepository = goodsPictureRepository;
     }
 
     @Override
@@ -61,13 +68,22 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     @Transactional
     public Result resetGoodsMsg(ResetGoodsRequest resetGoodsRequest) {
+        logger.info("Entering resetGoodsMsg method with request: {}", resetGoodsRequest);
+
         Goods goods = goodsRepository.findById(resetGoodsRequest.getGoodsId()).orElse(null);
         if (goods == null) {
+            logger.error("Goods not found for id: {}", resetGoodsRequest.getGoodsId());
             return Result.fail("未找到指定的商品");
         }
 
+        logger.info("Goods found: {}", goods);
         if (!resetGoodsRequest.getGoods().isEmpty()) {
             ResetGoodsRequest.GoodsDto goodsDto = resetGoodsRequest.getGoods().get(0);
+
+            logger.info("Updating goods_picture for goodsNo: {} to new goodsNo: {}", goods.getGoodsNo(), goodsDto.getGoodsNo());
+            goodsPictureRepository.updateGoodsNo(goods.getGoodsNo(), goodsDto.getGoodsNo());
+
+            goods.setGoodsNo(goodsDto.getGoodsNo());
             goods.setGoodsName(goodsDto.getGoodsName());
             goods.setCategoryId(goodsDto.getCategoryId());
             goods.setGoodsIntroduce(goodsDto.getGoodsIntroduce());
@@ -76,9 +92,11 @@ public class GoodsServiceImpl implements GoodsService {
             goods.setGoodsPicture(goodsDto.getGoodsPicture());
             goods.setGoodsPrice(goodsDto.getGoodsMarketPrice());
             goods.setUpdateTime(LocalDateTime.now());
+            logger.info("Updated goods info: {}", goods);
         }
 
         goodsRepository.save(goods);
+        logger.info("Goods saved successfully");
 
         return Result.success("商品信息更新成功", goods);
     }
