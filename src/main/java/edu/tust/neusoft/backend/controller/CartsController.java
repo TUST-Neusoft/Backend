@@ -20,7 +20,8 @@ public class CartsController {
     }
 
     @PostMapping("/addCarts")
-    public Result addCarts(@RequestBody Carts cart) {
+    public Result addCarts(@CookieValue("user_id") int userId, @RequestBody Carts cart) {
+        cart.setUserId((long) userId);
         return cartsService.addCart(cart);
     }
 
