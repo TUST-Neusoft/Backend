@@ -44,7 +44,7 @@ public class AuthController {
             User user = (User) result.getData();
             MD5Utils md5Utils = new MD5Utils();
             String token = md5Utils.generateMd5Token();
-//            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
+            redis.opsForValue().set(String.valueOf(user.getId()), token, 1, TimeUnit.DAYS);
 
             // 创建并配置 userId Cookie
             Cookie userIdCookie = new Cookie("userId", String.valueOf(user.getId()));
