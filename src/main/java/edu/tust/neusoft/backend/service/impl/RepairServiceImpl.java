@@ -1,7 +1,7 @@
 package edu.tust.neusoft.backend.service.impl;
 
 import edu.tust.neusoft.backend.model.ComplaintAdmin;
-import edu.tust.neusoft.backend.repository.ComplaintRepository;
+import edu.tust.neusoft.backend.repository.ComplaintAdminRepository;
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.RepairService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +13,16 @@ import java.util.Optional;
 
 @Service
 public class RepairServiceImpl implements RepairService {
-    private final ComplaintRepository complaintRepository;
+    private final ComplaintAdminRepository complaintAdminRepository;
 
     @Autowired
-    public RepairServiceImpl(ComplaintRepository complaintRepository) {
-        this.complaintRepository = complaintRepository;
+    public RepairServiceImpl(ComplaintAdminRepository complaintAdminRepository) {
+        this.complaintAdminRepository = complaintAdminRepository;
     }
 
     @Override
     public Result getAllComplaintsByUserId(Long userId) {
-        List<ComplaintAdmin> complaints = complaintRepository.findByUserId(userId);
+        List<ComplaintAdmin> complaints = complaintAdminRepository.findByUserId(userId);
         if (complaints.isEmpty()) {
             return Result.fail("没有找到投诉记录");
         }
@@ -31,12 +31,12 @@ public class RepairServiceImpl implements RepairService {
 
     @Override
     public Result changeComplaintStatus(Long id) {
-        Optional<ComplaintAdmin> optionalComplaint = complaintRepository.findById(id);
+        Optional<ComplaintAdmin> optionalComplaint = complaintAdminRepository.findById(id);
         if (optionalComplaint.isPresent()) {
             ComplaintAdmin complaint = optionalComplaint.get();
             complaint.setComplaintStatus(1); // 修改投诉状态为1
             complaint.setUpdateTime(LocalDateTime.now());
-            complaintRepository.save(complaint);
+            complaintAdminRepository.save(complaint);
             return Result.success("已处理", complaint);
         } else {
             return Result.fail("未找到投诉记录");

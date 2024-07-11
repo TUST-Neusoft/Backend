@@ -1,12 +1,12 @@
 package edu.tust.neusoft.backend.repository;
 
-import edu.tust.neusoft.backend.model.ComplaintAdmin;
+import edu.tust.neusoft.backend.model.ChargeAdmin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface ComplaintRepository extends JpaRepository<ComplaintAdmin, Long> {
-    List<ComplaintAdmin> findByUserId(Long userId);
+public interface ChargeAdminRepository extends JpaRepository<ChargeAdmin, Long> {
+    List<ChargeAdmin> findByUserId(Long userId);
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ParkingBindRepository extends JpaRepository<ParkingBindAdmin, Long> {
+public interface ParkingBindAdminRepository extends JpaRepository<ParkingBindAdmin, Long> {
     List<ParkingBindAdmin> findByParkingId(Long parkingId);
 }
