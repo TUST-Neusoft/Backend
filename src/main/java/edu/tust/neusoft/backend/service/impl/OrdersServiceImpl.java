@@ -55,8 +55,8 @@ public class OrdersServiceImpl implements OrdersService {
         Optional<Orders> existingOrderOptional = ordersRepository.findByOrderNo(orderRequest.getOrderNo());
 
         for (GoodsRequest goodsRequest : orderRequest.getGoods()) {
-            Optional<Carts> optionalCart = cartsRepository.findByUserIdAndGoodsNoAndStoreNo(userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
-            Optional<GoodsStore> optionalGoodsStore = Optional.ofNullable(goodsStoreRepository.findByGoodsNoAndStoreNo(goodsRequest.getGoodsNo(), goodsRequest.getStoreNo()));
+            Optional<Carts> optionalCart = cartsRepository.findByUserIdAndGoodsNoAndStoreNo((long)userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
+            Optional<GoodsStore> optionalGoodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
 
             if (optionalCart.isPresent() && optionalGoodsStore.isPresent()) {
                 Carts cart = optionalCart.get();
@@ -77,13 +77,20 @@ public class OrdersServiceImpl implements OrdersService {
                 totalOrderPrice += orderDetail.getTotalPrice();
 
                 // 删除购物车表中对应数据
-                cartsRepository.deleteByUserIdAndGoodsNoAndStoreNo(userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
+                cartsRepository.deleteByUserIdAndGoodsNoAndStoreNo((long)userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
             } else {
                 return Result.fail("未找到对应的购物车信息或商品信息");
             }
         }
 
         if (existingOrderOptional.isPresent()) {
+            // 更新订单主表数据的 total_price
+            Orders existingOrder = existingOrderOptional.get();
+            existingOrder.setTotalPrice(existingOrder.getTotalPrice() + totalOrderPrice);
+            existingOrder.setUpdateTime(LocalDateTime.now());
+
+            ordersRepository.save(existingOrder);
+        } else {
             // 新增订单主表数据
             Orders order = new Orders();
             order.setOrderNo(orderRequest.getOrderNo());
@@ -97,24 +104,18 @@ public class OrdersServiceImpl implements OrdersService {
             order.setUpdateTime(LocalDateTime.now());
 
             ordersRepository.save(order);
-        } else {
-            // 更新订单主表数据的 total_price
-            Orders existingOrder = existingOrderOptional.get();
-            existingOrder.setTotalPrice(existingOrder.getTotalPrice() + totalOrderPrice);
-            existingOrder.setUpdateTime(LocalDateTime.now());
-
-            ordersRepository.save(existingOrder);
         }
 
         return Result.success("订单添加成功", null);
     }
+
 
     @Override
     @Transactional
     public Result payOrders(int userId, PayOrderRequest payOrderRequest) {
         // 查询钱包信息
         Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
-        if (optionalWallet.isPresent()) {
+        if (optionalWallet.isEmpty()) {
             return Result.fail("未找到用户钱包信息");
         }
 
@@ -127,7 +128,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         // 查询订单信息
         Optional<Orders> optionalOrder = ordersRepository.findById(Integer.parseInt(payOrderRequest.getOrdersId()));
-        if (optionalOrder.isPresent()) {
+        if (optionalOrder.isEmpty()) {
             return Result.fail("未找到对应的订单");
         }
 
@@ -150,7 +151,7 @@ public class OrdersServiceImpl implements OrdersService {
         // 更新商品库存
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrderNo(order.getOrderNo());
         for (OrderDetail orderDetail : orderDetails) {
-            Optional<GoodsStore> optionalGoodsStore = Optional.ofNullable(goodsStoreRepository.findByGoodsNoAndStoreNo(orderDetail.getGoodsNo(), orderDetail.getStoreNo()));
+            Optional<GoodsStore> optionalGoodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(orderDetail.getGoodsNo(), orderDetail.getStoreNo());
             if (optionalGoodsStore.isPresent()) {
                 GoodsStore goodsStore = optionalGoodsStore.get();
                 goodsStore.setGoodsStock(goodsStore.getGoodsStock() - orderDetail.getGoodsAmount());
@@ -170,8 +171,9 @@ public class OrdersServiceImpl implements OrdersService {
             walletLog.setWalletId(wallet.getId());
             walletLog.setOrderNo(orderDetail.getOrderNo());
             walletLog.setAmount(orderDetail.getGoodsAmount());
-            walletLog.setType(String.valueOf(1));
-            walletLog.setState(String.valueOf(1));
+            walletLog.setType("1");
+            walletLog.setState("1");
+            walletLog.setCreateTime(LocalDateTime.now());
             walletLogRepository.save(walletLog);
         }
 

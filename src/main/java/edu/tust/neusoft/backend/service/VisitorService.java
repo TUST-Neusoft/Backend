@@ -4,6 +4,6 @@ import edu.tust.neusoft.backend.model.dto.AddVisitorRequest;
 import edu.tust.neusoft.backend.response.Result;
 
 public interface VisitorService {
-    Result getMyVisitor(int userId);
-    Result addVisitor(int userId, AddVisitorRequest request);
+    Result getMyVisitor(Long userId);
+    Result addVisitor(Long userId, AddVisitorRequest request);
 }

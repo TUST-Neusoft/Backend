@@ -14,7 +14,7 @@ public class Visitor {
     private int id;
 
     @Column(name = "user_id")
-    private int userId;
+    private long userId;
 
     @Column(name = "visitor_objective")
     private String visitorObjective;

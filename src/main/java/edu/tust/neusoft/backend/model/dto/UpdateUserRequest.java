@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 public class UpdateUserRequest {
-    private int id;
+    private Long id;
 
     private String phone;
 

@@ -30,7 +30,6 @@ public class WalletLog {
     private String state;
 
     @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }

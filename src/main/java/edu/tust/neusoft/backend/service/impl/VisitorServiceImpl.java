@@ -24,13 +24,13 @@ public class VisitorServiceImpl implements VisitorService {
     }
 
     @Override
-    public Result getMyVisitor(int userId) {
+    public Result getMyVisitor(Long userId) {
         List<Visitor> visitors = visitorRepository.findByUserId(userId);
         return Result.success("获取成功", visitors);
     }
 
     @Override
-    public Result addVisitor(int userId, AddVisitorRequest request) {
+    public Result addVisitor(Long userId, AddVisitorRequest request) {
         if (request == null) {
             return Result.fail("请求不能为空");
         }

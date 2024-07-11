@@ -1,6 +1,8 @@
 package edu.tust.neusoft.backend.model.dto;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,10 @@ import lombok.Setter;
 public class StoreDTO {
     private Long id;
     private int areaId;
+
+    @JsonProperty("store_no")
     private String storeNo;
+
     private String storeName;
     private String storeAddress;
     private double maxLongitude;

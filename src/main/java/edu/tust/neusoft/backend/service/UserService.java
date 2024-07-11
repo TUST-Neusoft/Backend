@@ -12,9 +12,9 @@ public interface UserService {
 
     Result forgetPassword(String phone, String password, String userName);
     Result getUserByPhoneAndPassword(String phone, String password); // 获取用户信息的方法
-    Result getUserById(int userId); // 根据ID获取用户信息的方法
+    Result getUserById(Long userId); // 根据ID获取用户信息的方法
     Result updateUser(UpdateUserRequest updateUserRequest); // 更新用户信息的方法
-    Result updatePassword(int userId, String userPassword); // 更新用户密码的方法
+    Result updatePassword(Long userId, String userPassword); // 更新用户密码的方法
 
     Result getWalletBalance(int userId);
 
@@ -24,7 +24,7 @@ public interface UserService {
 
     Result getWalletLogs(int userId);
 
-    boolean existsById(int userId);
+    boolean existsById(Long userId);
 
     Result getAllUsers();
 }

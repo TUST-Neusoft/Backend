@@ -3,6 +3,7 @@ package edu.tust.neusoft.backend.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -23,10 +24,8 @@ public class Wallet {
     private String walletPassword;
 
     @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "update_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

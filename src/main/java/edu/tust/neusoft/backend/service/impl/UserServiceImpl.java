@@ -12,6 +12,7 @@ import edu.tust.neusoft.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
             // 记录登录日志
             PortalLoginLog loginLog = new PortalLoginLog();
-            loginLog.setUserId(Math.toIntExact(user.getId()));
+            loginLog.setUserId(user.getId().intValue()); // 将 Long 类型转换为 int
             loginLog.setLoginIp(loginIp);
             loginLog.setCreateTime(new Date());
             portalLoginLogRepository.save(loginLog);
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
             // 记录管理员登录日志
             AdminLoginLog loginLog = new AdminLoginLog();
-            loginLog.setUserId(Math.toIntExact(user.getId()));
+            loginLog.setUserId(user.getId().intValue()); // 将 Long 类型转换为 int
             loginLog.setLoginIp(loginIp);
             loginLog.setCreateTime(new Date());
             adminLoginLogRepository.save(loginLog);
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result getUserById(int userId) {
+    public Result getUserById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -150,7 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result updatePassword(int userId, String userPassword) {
+    public Result updatePassword(Long userId, String userPassword) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -167,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletBalance(int userId) {
-        Wallet wallet = walletRepository.findByUserId((long) userId).get();
+        Wallet wallet = walletRepository.findByUserId(userId).orElse(null);
         if (wallet != null) {
             return Result.success("获取成功", wallet.getWalletBalance());
         }
@@ -176,10 +177,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result chargeWallet(int userId, double amount) {
-        Wallet wallet = walletRepository.findByUserId((long) userId).get();
+        Wallet wallet = walletRepository.findByUserId(userId).orElse(null);
         if (wallet != null) {
             wallet.setWalletBalance(wallet.getWalletBalance() + amount);
-            wallet.setUpdateTime(new Date());
+            wallet.setUpdateTime(LocalDateTime.now());
             walletRepository.save(wallet);
             return Result.success("充值成功", wallet.getWalletBalance());
         }
@@ -192,7 +193,7 @@ public class UserServiceImpl implements UserService {
             return Result.fail("转账金额必须大于零");
         }
 
-        Wallet senderWallet = walletRepository.findByUserId((long) userId).get();
+        Wallet senderWallet = walletRepository.findByUserId(userId).orElse(null);
         if (senderWallet == null) {
             return Result.fail("发送方用户钱包不存在");
         }
@@ -206,17 +207,17 @@ public class UserServiceImpl implements UserService {
             return Result.fail("目标用户不存在");
         }
 
-        Wallet receiverWallet = walletRepository.findByUserId(targetUser.getId()).get();
+        Wallet receiverWallet = walletRepository.findByUserId(Integer.parseInt(String.valueOf(targetUser.getId()))).orElse(null);
         if (receiverWallet == null) {
             return Result.fail("目标用户钱包不存在");
         }
 
         senderWallet.setWalletBalance(senderWallet.getWalletBalance() - amount);
-        senderWallet.setUpdateTime(new Date());
+        senderWallet.setUpdateTime(LocalDateTime.now());
         walletRepository.save(senderWallet);
 
         receiverWallet.setWalletBalance(receiverWallet.getWalletBalance() + amount);
-        receiverWallet.setUpdateTime(new Date());
+        receiverWallet.setUpdateTime(LocalDateTime.now());
         walletRepository.save(receiverWallet);
 
         return Result.success("转账成功", null);
@@ -224,7 +225,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result getWalletLogs(int userId) {
-        Wallet wallet = walletRepository.findByUserId((long) userId).get();
+        Wallet wallet = walletRepository.findByUserId(userId).orElse(null);
         if (wallet == null) {
             return Result.fail("用户钱包不存在");
         }
@@ -234,7 +235,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsById(int userId) {
+    public boolean existsById(Long userId) {
         return userRepository.existsById(userId);
     }
 
@@ -244,3 +245,4 @@ public class UserServiceImpl implements UserService {
         return Result.success("获取成功", users);
     }
 }
+

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GoodsStoreServiceImpl implements GoodsStoreService {
@@ -33,11 +34,13 @@ public class GoodsStoreServiceImpl implements GoodsStoreService {
 
     @Override
     public Result resetGoodsPriceAndStorage(ResetGoodsPriceAndStorageRequest resetGoodsPriceAndStorageRequest) {
-        GoodsStore goodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(resetGoodsPriceAndStorageRequest.getGoodsNo(), resetGoodsPriceAndStorageRequest.getStoreNo());
-        if (goodsStore == null) {
+        Optional<GoodsStore> optionalGoodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(resetGoodsPriceAndStorageRequest.getGoodsNo(), resetGoodsPriceAndStorageRequest.getStoreNo());
+
+        if (!optionalGoodsStore.isPresent()) {
             return Result.fail("未找到指定的商品");
         }
 
+        GoodsStore goodsStore = optionalGoodsStore.get();
         goodsStore.setGoodsStock(resetGoodsPriceAndStorageRequest.getGoodsStock());
         goodsStore.setGoodsPrice(resetGoodsPriceAndStorageRequest.getGoodsPrice());
         goodsStore.setUpdateTime(LocalDateTime.now());
@@ -45,4 +48,5 @@ public class GoodsStoreServiceImpl implements GoodsStoreService {
 
         return Result.success("商品信息更新成功", goodsStore);
     }
+
 }

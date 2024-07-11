@@ -10,6 +10,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static edu.tust.neusoft.backend.config.BaseConfig.SUCCESS;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -23,7 +25,7 @@ public class AdminController {
     public Result login(@RequestBody LoginRequest loginRequest, HttpServletResponse response, HttpServletRequest request) {
         String loginIp = request.getRemoteAddr();
         Result result = userService.adminLoginByPhone(loginRequest.getPhone(), loginRequest.getPassword(), loginIp);
-        if (result.getCode() == 200) {
+        if (result.getCode() == SUCCESS) {
             User user = (User) result.getData();
             Cookie cookie = new Cookie("admin_id", String.valueOf(user.getId()));
             cookie.setPath("/");
