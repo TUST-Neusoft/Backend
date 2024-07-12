@@ -26,12 +26,17 @@ public class OrdersController {
     }
 
     @GetMapping("/getOrders")
-    public Result getOrders(String orderNo) {
+    public Result getOrders(@RequestParam String orderNo) {
         return orderDetailService.getOrderDetailByOrderNo(orderNo);
     }
 
+    @PostMapping("/addOrders")
+    public Result addOrders(@RequestBody OrderRequest OrderRequest, @CookieValue int userId) {
+        return ordersService.addOrders(userId, OrderRequest);
+    }
+
     @PostMapping("/payOrders")
-    public Result payOrders(@RequestBody PayOrderRequest payOrderRequest, @CookieValue("user_id") int userId) {
+    public Result payOrders(@RequestBody PayOrderRequest payOrderRequest, @CookieValue int userId) {
         return ordersService.payOrders(userId, payOrderRequest);
     }
 }

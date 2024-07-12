@@ -16,12 +16,12 @@ public class VisitorRecordsController {
     }
 
     @GetMapping("/getAll")
-    public Result getAllVisitorRecords(@CookieValue("user_id") Long userId) {
+    public Result getAllVisitorRecords(@CookieValue Long userId) {
         return visitorRecordsService.getAllVisitorRecordsByUserId(userId);
     }
 
     @PostMapping("/changeStatus")
-    public Result changeVisitorStatus(@RequestParam("id") Long id) {
+    public Result changeVisitorStatus(@RequestParam Long id) {
         return visitorRecordsService.changeVisitorStatus(id);
     }
 }

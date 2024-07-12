@@ -2,8 +2,9 @@ package edu.tust.neusoft.backend.repository;
 
 import edu.tust.neusoft.backend.model.WalletLog;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
 public interface WalletLogRepository extends JpaRepository<WalletLog, Integer> {
+    List<WalletLog> findByWalletId(int walletId);
 }

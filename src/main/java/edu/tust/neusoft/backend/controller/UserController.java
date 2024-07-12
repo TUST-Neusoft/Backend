@@ -21,7 +21,7 @@ public class UserController {
         if (userId == -1) {
             return Result.fail("用户未登录");
         }
-        return userService.getUserById(userId);
+        return userService.getUserById((long)userId);
     }
 
     @PostMapping("/updateUser")
@@ -46,6 +46,6 @@ public class UserController {
         if (userPassword == null || userPassword.isEmpty()) {
             return Result.fail("密码不能为空");
         }
-        return userService.updatePassword(userId, userPassword);
+        return userService.updatePassword((long)userId, userPassword);
     }
 }

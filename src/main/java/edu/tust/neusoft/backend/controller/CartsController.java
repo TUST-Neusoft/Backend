@@ -16,11 +16,12 @@ public class CartsController {
 
     @GetMapping("/getMyCarts")
     public Result getMyCarts(@CookieValue int userId) {
-        return cartsService.getCarts(userId);
+        return cartsService.getCarts((long)userId);
     }
 
     @PostMapping("/addCarts")
-    public Result addCarts(@RequestBody Carts cart) {
+    public Result addCarts(@CookieValue int userId, @RequestBody Carts cart) {
+        cart.setUserId((long) userId);
         return cartsService.addCart(cart);
     }
 
@@ -30,9 +31,9 @@ public class CartsController {
     }
 
     @GetMapping("/deleteCarts")
-    public Result deleteCart(Integer cartId) {
+    public Result deleteCart(@CookieValue Integer cartId) {
         System.out.println("Received carts_id: " + cartId);// 注意参数名匹配请求中的 'carts_id'
-        return cartsService.deleteCart(Long.valueOf(cartId));
+        return cartsService.deleteCart(cartId);
     }
 
 }

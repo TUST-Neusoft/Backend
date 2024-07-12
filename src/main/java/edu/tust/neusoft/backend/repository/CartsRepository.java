@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartsRepository extends JpaRepository<Carts, Integer> {
-    List<Carts> findByUserId(Integer userId);
-    @Transactional
-    void deleteByUserId(int userId);
+    List<Carts> findByUserId(Long userId);
 
     @Transactional
-    void deleteByUserIdAndGoodsNoAndStoreNo(int userId, String goodsNo, String storeNo);
+    void deleteByUserId(Long userId);
 
-    Optional<Carts> findByUserIdAndGoodsNoAndStoreNo(int userId, String goodsNo, String storeNo);
+    @Transactional
+    void deleteByUserIdAndGoodsNoAndStoreNo(Long userId, String goodsNo, String storeNo);
+
+    Optional<Carts> findByUserIdAndGoodsNoAndStoreNo(Long userId, String goodsNo, String storeNo);
 }

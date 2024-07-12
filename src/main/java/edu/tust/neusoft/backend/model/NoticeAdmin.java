@@ -1,18 +1,18 @@
 package edu.tust.neusoft.backend.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
+@Data
 @Entity
-@Setter
-@Getter
 @Table(name = "notice")
 public class NoticeAdmin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(name = "notice_title")
     private String noticeTitle;

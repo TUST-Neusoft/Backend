@@ -16,12 +16,12 @@ public class PaymentController {
     }
 
     @GetMapping("/getAll")
-    public Result getAllCharges(@CookieValue("user_id") Long userId) {
+    public Result getAllCharges(@CookieValue Long userId) {
         return paymentService.getAllChargesByUserId(userId);
     }
 
     @GetMapping("/getDetail")
-    public Result getChargeDetails(@RequestParam("charge_no") String chargeNo) {
+    public Result getChargeDetails(@RequestParam String chargeNo) {
         return paymentService.getChargeDetailsByChargeNo(chargeNo);
     }
 }

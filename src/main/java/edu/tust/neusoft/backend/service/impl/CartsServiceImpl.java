@@ -35,15 +35,22 @@ public class CartsServiceImpl implements CartsService {
     }
 
     @Override
-    public Result getCarts(int userId) {
+    public Result getCarts(Long userId) {
         List<Carts> carts = cartsRepository.findByUserId(userId);
         List<CartDetailDTO> cartList = new ArrayList<>();
 
         for (Carts cart : carts) {
             String goodsNo = cart.getGoodsNo();
             Goods goods = goodsRepository.findByGoodsNo(goodsNo);
+            if (goods == null) {
+                return Result.fail("未找到对应的商品");
+            }
+
             String storeNo = cart.getStoreNo();
             Store store = storeRepository.findByStoreNo(storeNo);
+            if (store == null) {
+                return Result.fail("未找到对应的门店");
+            }
 
             Optional<GoodsStore> goodsStoreOpt = goodsStoreRepository.findByGoodsNoAndStoreNo(goodsNo, storeNo);
             Double price = null;
@@ -51,13 +58,13 @@ public class CartsServiceImpl implements CartsService {
 
             if (goodsStoreOpt.isPresent()) {
                 GoodsStore goodsStore = goodsStoreOpt.get();
-                price = goodsStore.getPrice();
-                stock = (int) goodsStore.getStock();
+                price = goodsStore.getGoodsPrice();
+                stock = goodsStore.getGoodsStock();
             }
 
             // Assemble DTOs
             GoodsDTO goodsDTO = new GoodsDTO();
-            goodsDTO.setId(goods.getId());
+            goodsDTO.setId(Long.valueOf(goods.getId()));
             goodsDTO.setGoodsNo(goods.getGoodsNo());
             goodsDTO.setGoodsName(goods.getGoodsName());
             goodsDTO.setCategoryId(goods.getCategoryId());
@@ -144,7 +151,7 @@ public class CartsServiceImpl implements CartsService {
         }
 
         // 根据 userId 查询现有的购物车项
-        List<Carts> existingCarts = cartsRepository.findByUserId(Math.toIntExact(cart.getUserId()));
+        List<Carts> existingCarts = cartsRepository.findByUserId((long)Math.toIntExact(cart.getUserId()));
         if (existingCarts.isEmpty()) {
             return Result.fail("根据用户 ID 未找到购物车");
         }
@@ -161,14 +168,14 @@ public class CartsServiceImpl implements CartsService {
         return Result.success("购物车更新成功", existingCarts);
     }
 
-    public Result deleteCart(Long cartId) {
-        Optional<Carts> cart = cartsRepository.findById(Math.toIntExact(cartId));
+    public Result deleteCart(Integer cartId) {
+        Optional<Carts> cart = cartsRepository.findById(cartId);
         if (!cart.isPresent()) {
             return Result.fail("购物车不存在");
         }
 
-        cartsRepository.deleteById(Math.toIntExact(cartId));
-        return Result.success("购物车删除成功",deleteCart(cartId));
+        cartsRepository.deleteById(cartId);
+        return Result.success("购物车删除成功",null);
     }
 
 }

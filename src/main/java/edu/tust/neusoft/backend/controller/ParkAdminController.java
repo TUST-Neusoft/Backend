@@ -16,7 +16,7 @@ public class ParkAdminController {
     }
 
     @GetMapping("/getAll")
-    public Result getAllParking(@CookieValue("user_id") Long userId) {
+    public Result getAllParking(@CookieValue Long userId) {
         return parkAdminService.getAllParkingByUserId(userId);
     }
 }

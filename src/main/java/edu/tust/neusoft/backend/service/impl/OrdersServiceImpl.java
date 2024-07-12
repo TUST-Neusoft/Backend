@@ -25,22 +25,22 @@ public class OrdersServiceImpl implements OrdersService {
 
     private final OrderDetailRepository orderDetailRepository;
 
-    public OrdersServiceImpl(OrdersRepository ordersRepository, OrderDetailRepository orderDetailRepository) {
+    private final CartsRepository cartsRepository;
+
+    private final GoodsStoreRepository goodsStoreRepository;
+
+    private final WalletRepository walletRepository;
+
+    private final WalletLogRepository walletLogRepository;
+
+    public OrdersServiceImpl(OrdersRepository ordersRepository, OrderDetailRepository orderDetailRepository, CartsRepository cartsRepository, GoodsStoreRepository goodsStoreRepository, WalletRepository walletRepository, WalletLogRepository walletLogRepository) {
         this.ordersRepository = ordersRepository;
         this.orderDetailRepository = orderDetailRepository;
+        this.cartsRepository = cartsRepository;
+        this.goodsStoreRepository = goodsStoreRepository;
+        this.walletRepository = walletRepository;
+        this.walletLogRepository = walletLogRepository;
     }
-
-    @Autowired
-    private CartsRepository cartsRepository;
-
-    @Autowired
-    private GoodsStoreRepository goodsStoreRepository;
-
-    @Autowired
-    private WalletRepository walletRepository;
-
-    @Autowired
-    private WalletLogRepository walletLogRepository;
 
     @Override
     public Result getOrdersByUserId(int userId) {
@@ -55,7 +55,7 @@ public class OrdersServiceImpl implements OrdersService {
         Optional<Orders> existingOrderOptional = ordersRepository.findByOrderNo(orderRequest.getOrderNo());
 
         for (GoodsRequest goodsRequest : orderRequest.getGoods()) {
-            Optional<Carts> optionalCart = cartsRepository.findByUserIdAndGoodsNoAndStoreNo(userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
+            Optional<Carts> optionalCart = cartsRepository.findByUserIdAndGoodsNoAndStoreNo((long)userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
             Optional<GoodsStore> optionalGoodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
 
             if (optionalCart.isPresent() && optionalGoodsStore.isPresent()) {
@@ -67,8 +67,8 @@ public class OrdersServiceImpl implements OrdersService {
                 orderDetail.setStoreNo(goodsRequest.getStoreNo());
                 orderDetail.setGoodsNo(goodsRequest.getGoodsNo());
                 orderDetail.setGoodsAmount(cart.getAmount());
-                orderDetail.setGoodsPrice(goodsStore.getPrice());
-                orderDetail.setTotalPrice(cart.getAmount() * goodsStore.getPrice());
+                orderDetail.setGoodsPrice(goodsStore.getGoodsPrice());
+                orderDetail.setTotalPrice(cart.getAmount() * goodsStore.getGoodsPrice());
                 orderDetail.setCreateTime(LocalDateTime.now());
                 orderDetail.setUpdateTime(LocalDateTime.now());
 
@@ -77,13 +77,20 @@ public class OrdersServiceImpl implements OrdersService {
                 totalOrderPrice += orderDetail.getTotalPrice();
 
                 // 删除购物车表中对应数据
-                cartsRepository.deleteByUserIdAndGoodsNoAndStoreNo(userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
+                cartsRepository.deleteByUserIdAndGoodsNoAndStoreNo((long)userId, goodsRequest.getGoodsNo(), goodsRequest.getStoreNo());
             } else {
                 return Result.fail("未找到对应的购物车信息或商品信息");
             }
         }
 
-        if (existingOrderOptional.isEmpty()) {
+        if (existingOrderOptional.isPresent()) {
+            // 更新订单主表数据的 total_price
+            Orders existingOrder = existingOrderOptional.get();
+            existingOrder.setTotalPrice(existingOrder.getTotalPrice() + totalOrderPrice);
+            existingOrder.setUpdateTime(LocalDateTime.now());
+
+            ordersRepository.save(existingOrder);
+        } else {
             // 新增订单主表数据
             Orders order = new Orders();
             order.setOrderNo(orderRequest.getOrderNo());
@@ -97,24 +104,18 @@ public class OrdersServiceImpl implements OrdersService {
             order.setUpdateTime(LocalDateTime.now());
 
             ordersRepository.save(order);
-        } else {
-            // 更新订单主表数据的 total_price
-            Orders existingOrder = existingOrderOptional.get();
-            existingOrder.setTotalPrice(existingOrder.getTotalPrice() + totalOrderPrice);
-            existingOrder.setUpdateTime(LocalDateTime.now());
-
-            ordersRepository.save(existingOrder);
         }
 
         return Result.success("订单添加成功", null);
     }
+
 
     @Override
     @Transactional
     public Result payOrders(int userId, PayOrderRequest payOrderRequest) {
         // 查询钱包信息
         Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
-        if (optionalWallet.isEmpty()) {
+        if (optionalWallet.isPresent()) {
             return Result.fail("未找到用户钱包信息");
         }
 
@@ -127,7 +128,7 @@ public class OrdersServiceImpl implements OrdersService {
 
         // 查询订单信息
         Optional<Orders> optionalOrder = ordersRepository.findById(Integer.parseInt(payOrderRequest.getOrdersId()));
-        if (optionalOrder.isEmpty()) {
+        if (optionalOrder.isPresent()) {
             return Result.fail("未找到对应的订单");
         }
 
@@ -153,7 +154,7 @@ public class OrdersServiceImpl implements OrdersService {
             Optional<GoodsStore> optionalGoodsStore = goodsStoreRepository.findByGoodsNoAndStoreNo(orderDetail.getGoodsNo(), orderDetail.getStoreNo());
             if (optionalGoodsStore.isPresent()) {
                 GoodsStore goodsStore = optionalGoodsStore.get();
-                goodsStore.setStock(goodsStore.getStock() - orderDetail.getGoodsAmount());
+                goodsStore.setGoodsStock(goodsStore.getGoodsStock() - orderDetail.getGoodsAmount());
                 goodsStoreRepository.save(goodsStore);
             } else {
                 return Result.fail("未找到对应的商品库存信息");
@@ -170,8 +171,8 @@ public class OrdersServiceImpl implements OrdersService {
             walletLog.setWalletId(wallet.getId());
             walletLog.setOrderNo(orderDetail.getOrderNo());
             walletLog.setAmount(orderDetail.getGoodsAmount());
-            walletLog.setType(1);
-            walletLog.setState(1);
+            walletLog.setType("1");
+            walletLog.setState("1");
             walletLog.setCreateTime(LocalDateTime.now());
             walletLogRepository.save(walletLog);
         }

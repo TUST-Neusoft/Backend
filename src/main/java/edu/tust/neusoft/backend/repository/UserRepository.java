@@ -9,7 +9,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // 根据手机号查找用户
     Optional<User> findByPhone(String phone);
 
-    User findById(Long id);
+//    User findById(Long id);
+
+    Optional<User> findById(Long id);
 
     // 根据手机号和密码查找用户
     User findByPhoneAndUserPassword(String phone, String password);

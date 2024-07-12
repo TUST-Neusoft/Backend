@@ -26,7 +26,7 @@ public class GoodsFavoritesController {
     }
 
     @GetMapping("/getFavoritesNum")
-    public Result getFavoritesCountByGoodsNo(String goodsNo) {
+    public Result getFavoritesCountByGoodsNo(@RequestParam String goodsNo) {
         if (goodsNo == null || goodsNo.isEmpty()) {
             return Result.fail("goods_no 参数不能为空");
         }
@@ -45,7 +45,7 @@ public class GoodsFavoritesController {
         }
 
         // 检查 user_id 是否存在
-        if (!userService.existsById(request.getUserId())) {
+        if (!userService.existsById((long) request.getUserId())) {
             return Result.fail("用户ID不存在");
         }
 
@@ -62,7 +62,7 @@ public class GoodsFavoritesController {
     }
 
     @GetMapping("/deleteFavorites")
-    public Result deleteFavorite(int favoritesId) {
+    public Result deleteFavorite(@RequestParam int favoritesId) {
         boolean exists = goodsFavoritesService.existsById(favoritesId);
         if (!exists) {
             return Result.fail("收藏记录不存在");

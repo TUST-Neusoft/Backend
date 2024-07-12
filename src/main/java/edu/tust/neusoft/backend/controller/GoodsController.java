@@ -2,11 +2,11 @@ package edu.tust.neusoft.backend.controller;
 
 import edu.tust.neusoft.backend.response.Result;
 import edu.tust.neusoft.backend.service.GoodsService;
+import edu.tust.neusoft.backend.service.GoodsStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/goods")
@@ -19,15 +19,12 @@ public class GoodsController {
     }
 
     @GetMapping("/getAll")
-    public Result getGoodsByCategoryId(Integer categoryId) {
-        if (categoryId == null) {
-            return Result.fail("categoryId参数不能为空");
-        }
-        return goodsService.getGoodsByCategoryId(categoryId);
+    public Result getGoodsByCategoryId() {
+        return goodsService.getAllGoods();
     }
 
     @GetMapping("/getDetail")
-    public Result getGoodsByGoodsNo(String goodsNo) {
+    public Result getGoodsByGoodsNo(@RequestParam String goodsNo) {
         if (goodsNo == null || goodsNo.isEmpty()) {
             return Result.fail("goodsNo参数不能为空");
         }
@@ -35,10 +32,20 @@ public class GoodsController {
     }
 
     @GetMapping("/search")
-    public Result searchGoodsByGoodsName(String goodsName) {
+    public Result searchGoodsByGoodsName(@RequestParam String goodsName) {
         if (goodsName == null || goodsName.isEmpty()) {
             return Result.fail("goodsName参数不能为空");
         }
         return goodsService.searchGoodsByGoodsName(goodsName);
     }
+
+    @PostMapping("/getGoodsStore")
+    public Result getGoodsStoreByGoodsNo(@RequestBody Map<String, String> request) {
+        String goodsNo = request.get("goodsNo");
+        if (goodsNo == null || goodsNo.isEmpty()) {
+            return Result.fail("goodsNo参数不能为空");
+        }
+        return goodsService.getGoodsStoreByGoodsNo(goodsNo);
+    }
 }
+
